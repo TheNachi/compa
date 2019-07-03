@@ -7,14 +7,16 @@ import {
 
 import MainTabNavigator from './MainTabNavigator';
 import Register from '../screens/Login';
-import PhoneNumber from '../screens/Auth/PhoneNumber';
+import PhoneNumber from '../screens/Auth/Phone/PhoneNumber';
+import ConfirmCode from '../screens/Auth/Phone/ConfirmCode';
 
 const AuthNavigator = createStackNavigator(
   {
     RegisterScreen: Register,
-    PhoneNumberScreen: PhoneNumber
+    PhoneNumberScreen: PhoneNumber,
+    ConfirmCodeScreen: ConfirmCode
   }
-  // { initialRouteName: 'PhoneNumberScreen' }
+  // { initialRouteName: 'ConfirmCodeScreen' }
 );
 
 export default createAppContainer(

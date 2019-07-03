@@ -1,18 +1,9 @@
 import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { Alert, View } from 'react-native';
 import styled, { css } from 'styled-components/native';
-import Button from '../../components/Button';
-import Colors from '../../constants/Colors';
+import Button from '../../../components/Button';
+import Colors from '../../../constants/Colors';
 
 const HeaderText = styled.Text`
   color: #344148;
@@ -34,6 +25,26 @@ const BodyText = styled.Text`
 class PhoneNumber extends React.Component {
   state = { code: '', phone: '' };
 
+  handlePhoneNumber = () => {
+    let { code, phone } = this.state;
+    Alert.alert(
+      'Confirmation',
+      `We will send a verification code to the following number ${code}${phone}`,
+      [
+        {
+          text: "Don't Allow",
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel'
+        },
+        {
+          text: 'Allow',
+          onPress: () => this.props.navigation.navigate('ConfirmCodeScreen')
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
   render() {
     let { navigate } = this.props.navigation;
 
@@ -46,11 +57,11 @@ class PhoneNumber extends React.Component {
         </BodyText>
         <TextInputWrap>
           <TextInputBox
-            onChangeText={text => this.setState({ code })}
+            onChangeText={code => this.setState({ code })}
             value={this.state.code}
             maxLength={4}
             style={{
-              flex: 0.12,
+              flex: 0.16,
               marginRight: 10,
               justifyContent: 'center',
               alignItems: 'center'
@@ -67,7 +78,7 @@ class PhoneNumber extends React.Component {
         <Button
           title="Continue"
           color={Colors.squlptr}
-          onPress={() => navigate('PhoneNumberScreen')}
+          onPress={this.handlePhoneNumber}
         />
       </View>
     );
