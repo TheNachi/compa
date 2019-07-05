@@ -7,10 +7,19 @@ import {
 
 import MainTabNavigator from './MainTabNavigator';
 import Register from '../screens/Login';
+import PhoneNumber from '../screens/Auth/Phone/PhoneNumber';
+import ConfirmCode from '../screens/Auth/Phone/ConfirmCode';
+import BuildProfile from '../screens/BuildProfile';
 
-const AuthNavigator = createStackNavigator({
-  RegisterScreen: Register
-});
+const AuthNavigator = createStackNavigator(
+  {
+    RegisterScreen: Register,
+    PhoneNumberScreen: PhoneNumber,
+    ConfirmCodeScreen: ConfirmCode,
+    BuildProfileScreen: BuildProfile
+  }
+  // { initialRouteName: 'ConfirmCodeScreen' }
+);
 
 export default createAppContainer(
   createSwitchNavigator({
