@@ -28,7 +28,6 @@ export default class RegisterScreen extends React.Component {
               title="Continue with Facebook"
               color={Colors.facebook}
               icon="facebook"
-              onPress={() => navigate('PhoneNumberScreen')}
             />
             <Button
               title="Continue with Google"
@@ -36,7 +35,11 @@ export default class RegisterScreen extends React.Component {
               icon="google"
               wrapStyle={{ marginLeft: -15 }}
             />
-            <Button title="Use Phone Number" color={Colors.squlptr} />
+            <Button
+              title="Use Phone Number"
+              color={Colors.squlptr}
+              onPress={() => navigate('PhoneNumberScreen')}
+            />
           </View>
         </ScrollView>
       </View>

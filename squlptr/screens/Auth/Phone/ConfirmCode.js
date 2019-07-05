@@ -85,7 +85,7 @@ class ConfirmCode extends React.Component {
         <Button
           title="Verify"
           color={Colors.squlptr}
-          onPress={() => alert('hey there')}
+          onPress={() => navigate('BuildProfileScreen')}
         />
       </View>
     );
