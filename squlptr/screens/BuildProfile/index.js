@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, View, TouchableOpacity } from 'react-native';
+import { Alert, View, TouchableOpacity, ScrollView } from 'react-native';
 import styled, { css } from 'styled-components/native';
 import Icon from '@expo/vector-icons/AntDesign';
 import Colors from '../../constants/Colors';
@@ -63,7 +63,7 @@ class BuildProfile extends React.Component {
     let { navigate } = this.props.navigation;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', marginTop: 40 }}>
+      <ScrollView contentContainerStyle={{ flex: 1, alignItems: 'center', marginTop: 40 }}>
         <CloseWrap>
           <TouchableOpacity>
             <Icon name="close" size={40} style={{ color: Colors.squlptr }} />
@@ -90,7 +90,7 @@ class BuildProfile extends React.Component {
           value={this.state.lastName}
           style={{ width: '80%' }}
           keyboardType="name-phone-pad"
-          placeholder="First name"
+          placeholder="Last"
         />
         <TextInputBox
           onChangeText={email => this.setState({ email })}
@@ -101,7 +101,7 @@ class BuildProfile extends React.Component {
           placeholder="First name"
         />
         <Button title="Continue" color={Colors.squlptr} />
-      </View>
+      </ScrollView>
     );
   }
 }
