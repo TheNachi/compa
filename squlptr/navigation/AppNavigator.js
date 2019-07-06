@@ -10,6 +10,7 @@ import Register from '../screens/Login';
 import PhoneNumber from '../screens/Auth/Phone/PhoneNumber';
 import ConfirmCode from '../screens/Auth/Phone/ConfirmCode';
 import BuildProfile from '../screens/BuildProfile';
+import Home from '../screens/Home';
 
 const AuthNavigator = createStackNavigator(
   {
@@ -21,11 +22,19 @@ const AuthNavigator = createStackNavigator(
   // { initialRouteName: 'ConfirmCodeScreen' }
 );
 
+const AppNavigator = createStackNavigator({
+  HomeScreen: Home
+});
+
 export default createAppContainer(
-  createSwitchNavigator({
-    Auth: AuthNavigator,
-    // You could add another route here for authentication.
-    // Read more at https://reactnavigation.org/docs/en/auth-flow.html
-    Main: MainTabNavigator
-  })
+  createSwitchNavigator(
+    {
+      Auth: AuthNavigator,
+      App: AppNavigator,
+      // You could add another route here for authentication.
+      // Read more at https://reactnavigation.org/docs/en/auth-flow.html
+      Main: MainTabNavigator
+    },
+    { initialRouteName: 'App' }
+  )
 );
