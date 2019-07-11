@@ -11,6 +11,7 @@ import PhoneNumber from '../screens/Auth/Phone/PhoneNumber';
 import ConfirmCode from '../screens/Auth/Phone/ConfirmCode';
 import BuildProfile from '../screens/BuildProfile';
 import Home from '../screens/Home';
+import Appointments from '../screens/Appointments';
 
 const AuthNavigator = createStackNavigator(
   {
@@ -23,7 +24,8 @@ const AuthNavigator = createStackNavigator(
 );
 
 const AppNavigator = createStackNavigator({
-  HomeScreen: Home
+  AppointmentsScreen: Appointments,
+  HomeScreen: Home,
 });
 
 export default createAppContainer(
