@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { ScrollView, StyleSheet, View, Image, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../constants/Colors';
-import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { Feather, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-navigation';
 import LogoTitle from '../../components/LogoTitle';
@@ -31,7 +31,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <SafeAreaView>
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView ref="_scrollView" contentContainerStyle={styles.container}>
           <StatusBar barStyle="light-content" />
           <ImgBackground src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" />
           <SkillView>
@@ -105,10 +105,31 @@ export default class Home extends React.Component {
             </DocCard>
           </View>
         </ScrollView>
+        <ScrollerStyle
+          onPress={() => {
+            this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true });
+          }}
+        >
+          <FontAwesome name="angle-up" size={30} style={{ color: '#fff' }} />
+        </ScrollerStyle>
       </SafeAreaView>
     );
   }
 }
+
+const Scroller = () => <ScrollerStyle />;
+
+const ScrollerStyle = styled.TouchableOpacity`
+  width: 56px;
+  height: 56px;
+  border-radius: 100px;
+  background: ${Colors.squlptr};
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  bottom: 3%;
+  right: 20px;
+`;
 
 const DocTextSecondary = styled.Text`
   font-size: 12px;
