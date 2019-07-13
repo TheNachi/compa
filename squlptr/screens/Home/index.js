@@ -1,91 +1,114 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
+import { ScrollView, StyleSheet, View, Image, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../constants/Colors';
-import RoundedImage from '../../components/RoundedImage';
+import { Feather, MaterialIcons } from '@expo/vector-icons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-navigation';
+import LogoTitle from '../../components/LogoTitle';
+import Pill from '../../components/Pill';
+import DocCard from '../../components/DocCard';
 
 export default class Home extends React.Component {
-  //   static navigationOptions = {
-  //     header: null
-  //   };
+  static navigationOptions = {
+    headerTitle: <LogoTitle />,
+    headerRight: (
+      <TouchableOpacity style={{ marginRight: 25 }}>
+        <MaterialIcons name="mode-comment" color="#fff" size={25} />
+      </TouchableOpacity>
+    ),
+    headerLeft: (
+      <TouchableOpacity style={{ marginLeft: 25 }}>
+        <Feather name="align-left" color="#fff" size={25} />
+      </TouchableOpacity>
+    ),
+    headerStyle: {
+      backgroundColor: Colors.squlptr
+    },
+    headerTintColor: '#fff'
+  };
   render() {
-    let { navigate } = this.props.navigation;
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        <ImgBackground src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" />
-        <SkillView>
-          <Pill title="Breast Augmentation" />
-          <Pill title="Lip Filler" background="rgba(194, 251, 255, 0.82)" />
-          <Pill title="Liposuction" background="rgba(249, 216, 255, 0.82)" />
-        </SkillView>
-        <View style={{ paddingHorizontal: 25 }}>
-          <Doc
-            name="Dr Charles Darwin"
-            clinic="Alba Plastic Surgery and med spa"
-            thumbnail="https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-            image="https://images.unsplash.com/photo-1561196470-073aadc339e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-            views={1092}
-          />
-          <Doc
-            name="Dr Emma Isidi"
-            clinic="Alba Plastic Surgery and med spa"
-            thumbnail="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-            image="https://images.unsplash.com/photo-1561221821-24cd451ef705?ixlib=rb-1.2.1&auto=format&fit=crop&w=975&q=80"
-            views={2000}
-          />
-          <Doc
-            name="Dr Jane Doe"
-            clinic="Alba Plastic Surgery and med spa"
-            thumbnail="https://images.unsplash.com/photo-1523661149972-0becaca2016e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=914&q=80"
-            image="https://images.unsplash.com/photo-1557851831-1e9738c47f1c?ixlib=rb-1.2.1&auto=format&fit=crop&w=975&q=80"
-            views={8000}
-          />
-        </View>
-      </ScrollView>
+      <SafeAreaView>
+        <ScrollView contentContainerStyle={styles.container}>
+          <StatusBar barStyle="light-content" />
+          <ImgBackground src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" />
+          <SkillView>
+            <Pill title="Breast Augmentation" />
+            <Pill title="Lip Filler" background="rgba(194, 251, 255, 0.82)" />
+            <Pill title="Liposuction" background="rgba(249, 216, 255, 0.82)" />
+          </SkillView>
+          <View style={{ paddingHorizontal: 25 }}>
+            <DocCard
+              name="Dr Charles Darwin"
+              clinic="Alba Plastic Surgery and med spa"
+              thumbnail="https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
+              image="https://images.unsplash.com/photo-1561196470-073aadc339e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
+              views={1092}
+              hasVideo={true}
+              style={styles.docCard}
+            >
+              <>
+                <DocImageWrap>
+                  <Image
+                    style={{ width: '100%', height: '100%' }}
+                    source={{
+                      uri:
+                        'https://images.unsplash.com/photo-1561196470-073aadc339e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'
+                    }}
+                  />
+                </DocImageWrap>
+                <DocTextSecondary>{`1092 views`}</DocTextSecondary>
+              </>
+            </DocCard>
+            <DocCard
+              name="Dr Emma Isidi"
+              clinic="Alba Plastic Surgery and med spa"
+              thumbnail="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
+              views={2000}
+              hasVideo={true}
+              style={styles.docCard}
+            >
+              <>
+                <DocImageWrap>
+                  <Image
+                    style={{ width: '100%', height: '100%' }}
+                    source={{
+                      uri:
+                        'https://images.unsplash.com/photo-1561221821-24cd451ef705?ixlib=rb-1.2.1&auto=format&fit=crop&w=975&q=80'
+                    }}
+                  />
+                </DocImageWrap>
+                <DocTextSecondary>{`1092 views`}</DocTextSecondary>
+              </>
+            </DocCard>
+            <DocCard
+              name="Dr Jane Doe"
+              clinic="Alba Plastic Surgery and med spa"
+              thumbnail="https://images.unsplash.com/photo-1523661149972-0becaca2016e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=914&q=80"
+              hasVideo={true}
+              style={styles.docCard}
+            >
+              <>
+                <DocImageWrap>
+                  <Image
+                    style={{ width: '100%', height: '100%' }}
+                    source={{
+                      uri:
+                        'https://images.unsplash.com/photo-1557851831-1e9738c47f1c?ixlib=rb-1.2.1&auto=format&fit=crop&w=975&q=80'
+                    }}
+                  />
+                </DocImageWrap>
+                <DocTextSecondary>{`8000 views`}</DocTextSecondary>
+              </>
+            </DocCard>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
-
-const Doc = ({ thumbnail, image, name, clinic, views }) => (
-  <DocWrap>
-    <DocHeader>
-      <RoundedImage src={thumbnail} />
-      <DocTextWrap>
-        <DocTextPrimary>{name}</DocTextPrimary>
-        <DocTextSecondary>{clinic}</DocTextSecondary>
-      </DocTextWrap>
-    </DocHeader>
-    <DocImageWrap>
-      <Image
-        style={{ width: '100%', height: '100%' }}
-        source={{ uri: image }}
-      />
-    </DocImageWrap>
-    <DocTextSecondary>{`${views} views`}</DocTextSecondary>
-  </DocWrap>
-);
-
-const DocWrap = styled.View`
-  margin-bottom: 15px;
-`;
-
-const DocHeader = styled.View`
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 15px;
-`;
-
-const DocTextWrap = styled.View`
-  margin-left: 15px;
-`;
-
-const DocTextPrimary = styled.Text`
-  font-weight: 800;
-  font-size: 14px;
-  line-height: 19px;
-  margin-bottom: 3px;
-`;
 
 const DocTextSecondary = styled.Text`
   font-size: 12px;
@@ -108,25 +131,6 @@ const SkillView = styled.View`
   justify-content: space-between;
 `;
 
-const Pill = ({ title, background }) => (
-  <PillStyle background={background}>
-    <PillText>{title}</PillText>
-  </PillStyle>
-);
-
-const PillStyle = styled.View`
-  /* border: 1px solid red; */
-  border-radius: 25px;
-  padding: 8px 10px;
-  background: ${props => (props.background ? props.background : '#FFEFE0')};
-`;
-const PillText = styled.Text`
-  text-align: center;
-  font-size: 12px;
-  line-height: 14px;
-  color: #344148;
-`;
-
 const ImgBackground = ({ src }) => (
   <View style={{ height: 300 }}>
     <ImgBg source={{ uri: src }} resizeMethod="auto" resizeMode="cover">
@@ -137,15 +141,7 @@ const ImgBackground = ({ src }) => (
           'rgba(246, 126, 0, 0.64)',
           'rgba(246, 126, 0, 0.64)'
         ]}
-        style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          height: 150,
-          paddingBottom: 15,
-          justifyContent: 'flex-end'
-        }}
+        style={styles.gradientStyle}
       >
         <ImgTextPrimary>Carery Right</ImgTextPrimary>
         <ImgTextSecondary>@careyright</ImgTextSecondary>
@@ -182,25 +178,16 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff'
   },
-  contentContainer: {
-    paddingTop: 30,
-    flex: 1,
-    justifyContent: 'center'
+  gradientStyle: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 150,
+    paddingBottom: 15,
+    justifyContent: 'flex-end'
   },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10
-  },
-  getStartedContainer: {
-    alignItems: 'center'
+  docCard: {
+    paddingHorizontal: 0
   }
 });
-
-const Logo = styled.Image`
-  height: 90px;
-  width: 259px;
-  margin-bottom: 11px;
-`;
