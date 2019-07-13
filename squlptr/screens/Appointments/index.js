@@ -1,73 +1,189 @@
 import React from 'react';
 import styled, { css } from 'styled-components/native';
-import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Animated
+} from 'react-native';
+import { GestureHandler } from 'expo';
 import Colors from '../../constants/Colors';
 import RoundedImage from '../../components/RoundedImage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+const { Swipeable } = GestureHandler;
 
 export default class Appointments extends React.Component {
   render() {
     let { navigate } = this.props.navigation;
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={{ paddingHorizontal: 25 }}>
+        <View>
           <Text>Appointments</Text>
           <Doc
             name="Dr Charles Darwin"
             clinic="Alba Plastic Surgery and med spa"
             thumbnail="https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-            image="https://images.unsplash.com/photo-1561196470-073aadc339e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-            views={1092}
-            status="Pending"
+            status="Approved"
+            hasAppointment={true}
           />
           <Doc
             name="Dr Fari Wils"
             clinic="Meta Plastic Surgery"
             thumbnail="https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-            image="https://images.unsplash.com/photo-1561196470-073aadc339e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-            views={1092}
-            status="Approved"
-          />
+            status="Pending"
+            hasVideo={true}
+          >
+            <>
+              <DocImageWrap>
+                <Image
+                  style={{ width: '100%', height: '100%' }}
+                  source={{
+                    uri:
+                      'https://images.unsplash.com/photo-1561196470-073aadc339e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'
+                  }}
+                />
+              </DocImageWrap>
+              <DocTextSecondary>{`1092 views`}</DocTextSecondary>
+            </>
+          </Doc>
         </View>
       </ScrollView>
     );
   }
 }
 
-const Doc = ({
-  thumbnail,
-  image,
-  name,
-  clinic,
-  views,
-  status,
-  isAppointment
-}) => (
-  <DocWrap>
-    <DocHeader>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <RoundedImage src={thumbnail} />
-        <DocTextWrap>
-          <DocTextPrimary>{name}</DocTextPrimary>
-          <DocTextSecondary>{clinic}</DocTextSecondary>
-        </DocTextWrap>
-      </View>
-      {status && <DocStatus status={status}>{status}</DocStatus>}
-    </DocHeader>
-    <AppointmentCard />
-    {isAppointment && (
-      <>
-        <DocImageWrap>
-          <Image
-            style={{ width: '100%', height: '100%' }}
-            source={{ uri: image }}
-          />
-        </DocImageWrap>
-        <DocTextSecondary>{`${views} views`}</DocTextSecondary>
-      </>
-    )}
-  </DocWrap>
-);
+class Doc extends React.Component {
+  state = {
+    bounceValue: new Animated.Value(55),
+    showAppointment: true,
+    istoggled: false
+  };
+
+  toggleCardView = () => {
+    let initialValue = this.state.istoggled
+        ? this.state.maxHeight + this.state.minHeight
+        : this.state.minHeight,
+      finalValue = this.state.istoggled
+        ? this.state.minHeight
+        : this.state.maxHeight + this.state.minHeight;
+
+    this.setState({
+      istoggled: !this.state.istoggled
+    });
+
+    // let toValue = 220;
+    this.state.bounceValue.setValue(initialValue);
+    Animated.spring(this.state.bounceValue, {
+      toValue: finalValue,
+      velocity: 3,
+      bounciness: 2
+      // useNativeDriver: true
+    }).start();
+  };
+
+  _setMaxHeight = event => {
+    this.setState({
+      maxHeight: event.nativeEvent.layout.height
+    });
+  };
+
+  _setMinHeight = event => {
+    this.setState({
+      minHeight: event.nativeEvent.layout.height
+    });
+  };
+
+  RightActions = (progress, dragX) => {
+    const scale = dragX.interpolate({
+      inputRange: [-100, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp'
+    });
+    return (
+      <TouchableOpacity>
+        <View
+          style={{
+            backgroundColor: '#FEECEC',
+            height: 55,
+            justifyContent: 'center',
+            alignItems: 'flex-end',
+            paddingHorizontal: 20
+          }}
+        >
+          <Animated.Text
+            style={[{ color: '#EB5757' }, { transform: [{ scale }] }]}
+          >
+            Cancel
+          </Animated.Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  render() {
+    let {
+      thumbnail,
+      name,
+      clinic,
+      status,
+      hasVideo,
+      hasAppointment
+    } = this.props;
+    let { bounceValue, istoggled } = this.state;
+    return (
+      <Swipeable
+        renderRightActions={
+          hasVideo ? null : istoggled ? null : this.RightActions
+        }
+      >
+        <Animated.View
+          style={[
+            {
+              marginBottom: 5,
+              paddingHorizontal: 25,
+              overflow: 'hidden',
+              backgroundColor: istoggled ? '#F4F4F4' : '#fff'
+            },
+            { height: hasVideo ? 'auto' : bounceValue }
+          ]}
+          onPress={this.toggleCardView}
+        >
+          <DocHeader
+            style={{ borderBottomWidth: 1, borderBottomColor: '#f2f2f2' }}
+            disabled={!hasAppointment}
+            onLayout={this._setMinHeight}
+            onPress={this.toggleCardView}
+          >
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', height: 60 }}
+            >
+              <RoundedImage src={thumbnail} />
+              <DocTextWrap>
+                <DocTextPrimary>{name}</DocTextPrimary>
+                <DocTextSecondary>{clinic}</DocTextSecondary>
+              </DocTextWrap>
+            </View>
+            {status && <DocStatus status={status}>{status}</DocStatus>}
+          </DocHeader>
+          {hasAppointment && (
+            <View style={{ height: 180 }} onLayout={this._setMaxHeight}>
+              <AppointmentCard />
+            </View>
+          )}
+          {this.props.children}
+        </Animated.View>
+      </Swipeable>
+    );
+  }
+}
+
+const ListItem = ({ text, onSwipeFromLeft, onRightPress }) => {
+  <View>
+    <Text>H</Text>
+  </View>;
+};
 
 const AppointmentCard = () => (
   <AppointmentCardStyle>
@@ -142,17 +258,12 @@ const AppointmentCardBodyText = styled.Text`
   color: ${Colors.white};
 `;
 
-const DocWrap = styled.View`
-  margin-bottom: 15px;
-  border-bottom-width: 1px;
-  border-bottom-color: #f2f2f2;
-`;
-
-const DocHeader = styled.View`
+const DocHeader = styled.TouchableOpacity`
   flex-direction: row;
   align-items: center;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   justify-content: space-between;
+  /* background: pink; */
 `;
 
 const DocTextWrap = styled.View`
@@ -170,6 +281,7 @@ const DocTextSecondary = styled.Text`
   font-size: 12px;
   line-height: 14px;
   color: #8c8c8c;
+  margin-bottom: 5px;
 `;
 
 const DocImageWrap = styled.View`
@@ -239,7 +351,8 @@ const ImgBg = styled.ImageBackground`
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    flex: 1
   },
   contentContainer: {
     paddingTop: 30,
