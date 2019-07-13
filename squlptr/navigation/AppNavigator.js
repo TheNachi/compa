@@ -25,7 +25,7 @@ const AuthNavigator = createStackNavigator(
 
 const AppNavigator = createStackNavigator({
   AppointmentsScreen: Appointments,
-  HomeScreen: Home,
+  HomeScreen: Home
 });
 
 export default createAppContainer(
@@ -37,6 +37,6 @@ export default createAppContainer(
       // Read more at https://reactnavigation.org/docs/en/auth-flow.html
       Main: MainTabNavigator
     },
-    { initialRouteName: 'App' }
+    { initialRouteName: 'Main' }
   )
 );

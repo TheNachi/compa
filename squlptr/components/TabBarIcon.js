@@ -1,7 +1,9 @@
 import React from 'react';
+import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import Colors from '../constants/Colors';
+import { Home } from '../assets/icons';
 
 export default function TabBarIcon(props) {
   return (
@@ -9,7 +11,10 @@ export default function TabBarIcon(props) {
       name={props.name}
       size={26}
       style={{ marginBottom: -3 }}
-      color={props.focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+      color={props.focused ? Colors.squlptr : Colors.tabIconDefault}
     />
+    // <View>
+    //   <Home />
+    // </View>
   );
 }
