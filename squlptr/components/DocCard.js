@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { View, Animated, TouchableOpacity } from 'react-native';
 import { GestureHandler } from 'expo';
 import AppointmentCard from './AppointmentCard';
+import RoundedImage from './RoundedImage';
 const { Swipeable } = GestureHandler;
 
 class DocCard extends React.Component {

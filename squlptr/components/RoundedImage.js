@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 
-export default (RoundedImage = ({ src }) => (
+const RoundedImage = ({ src }) => (
   <View
     style={{
       height: 45,
@@ -19,4 +19,6 @@ export default (RoundedImage = ({ src }) => (
       source={{ uri: src }}
     />
   </View>
-));
+);
+
+export default RoundedImage;
