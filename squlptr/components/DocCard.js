@@ -7,7 +7,7 @@ const { Swipeable } = GestureHandler;
 
 class DocCard extends React.Component {
   state = {
-    bounceValue: new Animated.Value(55),
+    bounceValue: new Animated.Value(61),
     showAppointment: true,
     istoggled: false
   };
@@ -91,7 +91,6 @@ class DocCard extends React.Component {
         <Animated.View
           style={[
             {
-              marginBottom: 5,
               paddingHorizontal: 25,
               overflow: 'hidden',
               backgroundColor: istoggled ? '#F4F4F4' : '#fff'
