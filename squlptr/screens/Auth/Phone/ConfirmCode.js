@@ -2,7 +2,7 @@ import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import { View, Text } from 'react-native';
 import Icon from '@expo/vector-icons/Octicons';
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 import Button from '../../../components/Button';
 import Colors from '../../../constants/Colors';
 

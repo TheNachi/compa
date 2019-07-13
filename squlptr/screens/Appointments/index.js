@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';

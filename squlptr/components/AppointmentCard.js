@@ -1,12 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Colors from '../constants/Colors';
 
-const AppointmentCard = () => (
-  <AppointmentCardStyle>
-    <AppointmentCardHeaderWrap>
+const AppointmentCard = ({ status }) => (
+  <AppointmentCardStyle status={status}>
+    <AppointmentCardHeaderWrap status={status}>
       <AppointmentCardHeaderDetail
-        style={{ borderRightWidth: 1, borderRightColor: '#219653' }}
+        status={status}
+        style={{ borderRightWidth: 1 }}
       >
         <DetailHeader>Date</DetailHeader>
         <DetailBody>Oct 2, 1980</DetailBody>
@@ -27,20 +28,52 @@ const AppointmentCard = () => (
 );
 
 const AppointmentCardStyle = styled.View`
-  background-color: #27ae60;
+  /* background-color: #27ae60; */
   border-radius: 12px;
   overflow: hidden;
+  ${props =>
+    props.status == 'Pending' &&
+    css`
+      background: #f67e00;
+    `}
+
+  ${props =>
+    props.status == 'Approved' &&
+    css`
+      background: #27ae60;
+    `}
 `;
 
 const AppointmentCardHeaderWrap = styled.View`
-  background-color: #6fcf97;
   flex-direction: row;
+  ${props =>
+    props.status == 'Pending' &&
+    css`
+      background: #fdae5b;
+    `}
+
+  ${props =>
+    props.status == 'Approved' &&
+    css`
+      background-color: #6fcf97;
+    `}
 `;
 
 const AppointmentCardHeaderDetail = styled.View`
   flex: 1;
   align-items: center;
   padding: 10px 0;
+  ${props =>
+    props.status == 'Pending' &&
+    css`
+      border-right-color: #f67e00;
+    `}
+
+  ${props =>
+    props.status == 'Approved' &&
+    css`
+      border-right-color: #219653;
+    `}
 `;
 
 const DetailHeader = styled.Text`

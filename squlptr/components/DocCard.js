@@ -123,7 +123,7 @@ class DocCard extends React.Component {
           </DocCardHeader>
           {hasAppointment && (
             <View style={{ height: 180 }} onLayout={this._setMaxHeight}>
-              <AppointmentCard />
+              <AppointmentCard status={status} />
             </View>
           )}
           {this.props.children}

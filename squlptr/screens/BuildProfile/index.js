@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, View, TouchableOpacity, ScrollView } from 'react-native';
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 import Icon from '@expo/vector-icons/AntDesign';
 import Colors from '../../constants/Colors';
 import Button from '../../components/Button';
