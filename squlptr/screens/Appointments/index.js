@@ -28,7 +28,10 @@ export default class Appointments extends React.Component {
   render() {
     let { navigate } = this.props.navigation;
     return (
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.container}
+      >
         <View>
           <HeaderText>Appointments</HeaderText>
           <DocCard
@@ -79,7 +82,6 @@ const HeaderText = styled.Text`
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    flex: 1
+    backgroundColor: '#fff'
   }
 });
