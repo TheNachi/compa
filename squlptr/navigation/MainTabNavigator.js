@@ -1,63 +1,79 @@
 import React from 'react';
-import { Platform } from 'react-native';
 import {
   createStackNavigator,
-  createBottomTabNavigator,
+  createBottomTabNavigator
 } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
+// import HomeScreen from '../screens/HomeScreen';
+// import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import Home from '../screens/Home';
+import Appointments from '../screens/Appointments';
+import Colors from '../constants/Colors';
 
 const HomeStack = createStackNavigator({
-  Home: HomeScreen,
+  Home: Home
 });
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
+  tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="tv" />
 };
 
-const LinksStack = createStackNavigator({
-  Links: LinksScreen,
+const AppointmentStack = createStackNavigator({
+  Links: Appointments
 });
 
-LinksStack.navigationOptions = {
+AppointmentStack.navigationOptions = {
+  tabBarLabel: 'Links',
+  tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="calendar" />
+};
+
+const FavoriteStack = createStackNavigator({
+  Links: Appointments
+});
+
+FavoriteStack.navigationOptions = {
+  tabBarLabel: 'Links',
+  tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="heart" />
+};
+
+const FabStack = createStackNavigator({
+  Links: Appointments
+});
+
+FabStack.navigationOptions = {
   tabBarLabel: 'Links',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
-    />
-  ),
+    <TabBarIcon focused={focused} name="dots-horizontal" />
+  )
 };
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
+const ProfileStack = createStackNavigator({
+  Settings: SettingsScreen
 });
 
-SettingsStack.navigationOptions = {
+ProfileStack.navigationOptions = {
   tabBarLabel: 'Settings',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-    />
-  ),
+  tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="user" />
 };
 
-export default createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
-  SettingsStack,
-});
+export default createBottomTabNavigator(
+  {
+    HomeStack,
+    AppointmentStack,
+    FabStack,
+    FavoriteStack,
+    ProfileStack
+  },
+  {
+    resetOnBlur: true,
+    tabBarOptions: {
+      keyboardHidesTabBar: true,
+      activeTintColor: Colors.squlptr,
+      showLabel: false,
+      style: { backgroundColor: '#fff', borderTopColor: 'transparent' }
+    }
+  }
+);

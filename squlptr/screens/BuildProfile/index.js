@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, View, TouchableOpacity, ScrollView } from 'react-native';
-import styled, { css } from 'styled-components/native';
+import styled from 'styled-components/native';
 import Icon from '@expo/vector-icons/AntDesign';
 import Colors from '../../constants/Colors';
 import Button from '../../components/Button';
@@ -63,7 +63,9 @@ class BuildProfile extends React.Component {
     let { navigate } = this.props.navigation;
 
     return (
-      <ScrollView contentContainerStyle={{ flex: 1, alignItems: 'center', marginTop: 40 }}>
+      <ScrollView
+        contentContainerStyle={{ flex: 1, alignItems: 'center', marginTop: 40 }}
+      >
         <CloseWrap>
           <TouchableOpacity>
             <Icon name="close" size={40} style={{ color: Colors.squlptr }} />
@@ -100,7 +102,11 @@ class BuildProfile extends React.Component {
           keyboardType="email-address"
           placeholder="First name"
         />
-        <Button title="Continue" color={Colors.squlptr} />
+        <Button
+          title="Continue"
+          color={Colors.squlptr}
+          onPress={() => navigate('HomeScreen')}
+        />
       </ScrollView>
     );
   }
