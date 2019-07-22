@@ -11,6 +11,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import Home from '../screens/Home';
 import Appointments from '../screens/Appointments';
 import Colors from '../constants/Colors';
+import Profile from '../screens/Profile';
 
 const HomeStack = createStackNavigator({
   Home: Home
@@ -51,7 +52,7 @@ FabStack.navigationOptions = {
 };
 
 const ProfileStack = createStackNavigator({
-  Settings: SettingsScreen
+  Profile: Profile
 });
 
 ProfileStack.navigationOptions = {
@@ -67,6 +68,7 @@ export default createBottomTabNavigator(
     FavoriteStack,
     ProfileStack
   },
+  { initialRouteName: 'ProfileStack' },
   {
     resetOnBlur: true,
     tabBarOptions: {
