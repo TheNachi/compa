@@ -105,7 +105,7 @@ class BuildProfile extends React.Component {
         <Button
           title="Continue"
           color={Colors.squlptr}
-          onPress={() => navigate('HomeScreen')}
+          onPress={() => navigate('Bottom')}
         />
       </ScrollView>
     );

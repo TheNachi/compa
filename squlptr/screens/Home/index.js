@@ -9,9 +9,10 @@ import { SafeAreaView } from 'react-navigation';
 import LogoTitle from '../../components/LogoTitle';
 import Pill from '../../components/Pill';
 import DocCard from '../../components/DocCard';
+import { DrawerActions } from 'react-navigation';
 
 export default class Home extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation, screenProps }) => ({
     headerTitle: <LogoTitle />,
     headerRight: (
       <TouchableOpacity style={{ marginRight: 25 }}>
@@ -19,7 +20,12 @@ export default class Home extends React.Component {
       </TouchableOpacity>
     ),
     headerLeft: (
-      <TouchableOpacity style={{ marginLeft: 25 }}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.dispatch(DrawerActions.openDrawer());
+        }}
+        style={{ marginLeft: 25 }}
+      >
         <Feather name="align-left" color="#fff" size={25} />
       </TouchableOpacity>
     ),
@@ -27,7 +33,7 @@ export default class Home extends React.Component {
       backgroundColor: Colors.squlptr
     },
     headerTintColor: '#fff'
-  };
+  });
   render() {
     return (
       <SafeAreaView>
