@@ -14,8 +14,9 @@ import Colors from '../../constants/Colors';
 import LogoTitle from '../../components/LogoTitle';
 import Pill from '../../components/Pill';
 import Button from '../../components/Button';
+import { SwitchIcon } from '../../assets/icons';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default class Favourite extends React.Component {
   static navigationOptions = {
@@ -98,20 +99,63 @@ export default class Favourite extends React.Component {
         uri:
           'https://images.unsplash.com/photo-1561221821-24cd451ef705?ixlib=rb-1.2.1&auto=format&fit=crop&w=975&q=80'
       }
-    ]
+    ],
+    isImageSelected: false,
+    imageToDisplay: ''
+  };
+
+  handleSelectImage = fav => {
+    this.setState({ isImageSelected: true, imageToDisplay: fav });
+  };
+
+  handleDeleteImage = id => {
+    let { favourites } = this.state;
+    let _deletedImage = favourites.filter(value => value.id !== id);
+    this.setState({
+      favourites: _deletedImage,
+      isImageSelected: false
+    });
+  };
+
+  handleSwitch = () => {
+    this.setState({ isImageSelected: false });
   };
 
   render() {
-    let { favourites } = this.state;
+    let { favourites, isImageSelected } = this.state;
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.container}
       >
-        <HeaderText>Favourites</HeaderText>
-        <ImageBoxContainer>
-          {favourites.map((fav, index) => (
-            <ImageBox activeOpacity={0.5} key={fav.id}>
+        {isImageSelected === false && (
+          <>
+            <HeaderText>Favourites</HeaderText>
+            <ImageBoxContainer>
+              {favourites.map((fav, index) => (
+                <ImageBox
+                  onPress={() => this.handleSelectImage(fav)}
+                  activeOpacity={0.5}
+                  key={fav.id}
+                >
+                  <Image
+                    style={{
+                      height: '100%',
+                      width: '100%'
+                    }}
+                    resizeMode="cover"
+                    source={{
+                      uri: fav.uri
+                    }}
+                  />
+                </ImageBox>
+              ))}
+            </ImageBoxContainer>
+          </>
+        )}
+        {this.state.isImageSelected && (
+          <>
+            <ViewImage>
               <Image
                 style={{
                   height: '100%',
@@ -119,16 +163,53 @@ export default class Favourite extends React.Component {
                 }}
                 resizeMode="cover"
                 source={{
-                  uri: fav.uri
+                  uri: this.state.imageToDisplay.uri
                 }}
               />
-            </ImageBox>
-          ))}
-        </ImageBoxContainer>
+            </ViewImage>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '95%',
+                alignSelf: 'center',
+                alignItems: 'center',
+                paddingVertical: 20,
+                paddingHorizontal: 10
+              }}
+            >
+              <TouchableOpacity
+                onPress={this.handleSwitch}
+                style={{ height: 22, width: 22 }}
+              >
+                <Image
+                  style={{ height: '100%', width: '100%' }}
+                  source={require('../../assets/images/3d.png')}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  this.handleDeleteImage(this.state.imageToDisplay.id)
+                }
+              >
+                <FontAwesome size={22} name="trash-o" />
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </ScrollView>
     );
   }
 }
+
+const ViewImage = styled.TouchableOpacity`
+  width: 95%;
+  height: ${height / 2};
+  border-radius: 5px;
+  align-self: center;
+  overflow: hidden;
+  margin-top: 10px;
+`;
 
 const HeaderText = styled.Text`
   font-weight: 800;
@@ -154,6 +235,7 @@ const ImageBox = styled.TouchableOpacity`
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    marginBottom: 25
   }
 });
