@@ -137,7 +137,7 @@ export default createBottomTabNavigator(
     FavoriteStack,
     ProfileStack
   },
-  // { initialRouteName: 'FavoriteStack' },
+  { initialRouteName: 'ProfileStack' },
   {
     resetOnBlur: true,
     tabBarOptions: {

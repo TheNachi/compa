@@ -86,10 +86,6 @@ export default class Profile extends React.Component {
     });
   };
 
-  // handleChangeText = (name, value) => {
-  //   this.setState({ ...[name]: value });
-  // };
-
   render() {
     let { navigate } = this.props.navigation;
     let { isEditing, interests, interestValue, user } = this.state;
@@ -103,19 +99,27 @@ export default class Profile extends React.Component {
           <HeaderText>Profile</HeaderText>
           <View>
             <ProfileImageContainer>
-              <ProfileImage activeOpacity={0.6}>
-                <Image
-                  style={{
-                    height: '100%',
-                    width: '100%',
-                    borderRadius: 100
-                  }}
-                  resizeMode="cover"
-                  source={{
-                    uri:
-                      'https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'
-                  }}
-                />
+              <View
+                style={{
+                  position: 'relative',
+                  width: 100,
+                  height: 100,
+                  marginRight: 25
+                }}
+              >
+                <ProfileImage activeOpacity={0.6}>
+                  <Image
+                    style={{
+                      height: '100%',
+                      width: '100%'
+                    }}
+                    resizeMode="cover"
+                    source={{
+                      uri:
+                        'https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'
+                    }}
+                  />
+                </ProfileImage>
                 <ProfileImageIcon>
                   <FontAwesome
                     name="plus"
@@ -123,7 +127,7 @@ export default class Profile extends React.Component {
                     size={15}
                   />
                 </ProfileImageIcon>
-              </ProfileImage>
+              </View>
               {isEditing === false && (
                 <View
                   style={{
@@ -292,8 +296,8 @@ const ProfileImage = styled.TouchableOpacity`
   height: 100;
   width: 100;
   border-radius: 50;
-  margin-right: 25;
   z-index: 1;
+  overflow: hidden;
 `;
 
 const ProfileImageIcon = styled.View`
