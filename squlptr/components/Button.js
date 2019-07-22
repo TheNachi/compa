@@ -28,9 +28,9 @@ const ButtonText = styled.Text`
   font-size: 16px;
 `;
 
-const Button = ({ title, color, icon, wrapStyle, onPress }) => {
+const Button = ({ title, color, icon, wrapStyle, style, onPress }) => {
   return (
-    <ButtonStyle onPress={onPress} color={color}>
+    <ButtonStyle style={style} onPress={onPress} color={color}>
       <ButtonWrap style={wrapStyle}>
         {icon && (
           <MaterialCommunityIcons
