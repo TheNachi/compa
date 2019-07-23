@@ -9,13 +9,14 @@ import {
 } from 'react-native';
 import { Feather, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { DrawerActions } from 'react-navigation';
 import Colors from '../../constants/Colors';
 import LogoTitle from '../../components/LogoTitle';
 import Pill from '../../components/Pill';
 import Button from '../../components/Button';
 
 export default class Profile extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation, screenProps }) => ({
     headerTitle: <LogoTitle />,
     headerRight: (
       <TouchableOpacity style={{ marginRight: 25 }}>
@@ -23,7 +24,12 @@ export default class Profile extends React.Component {
       </TouchableOpacity>
     ),
     headerLeft: (
-      <TouchableOpacity style={{ marginLeft: 25 }}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.dispatch(DrawerActions.openDrawer());
+        }}
+        style={{ marginLeft: 25 }}
+      >
         <Feather name="align-left" color="#fff" size={25} />
       </TouchableOpacity>
     ),
@@ -31,7 +37,7 @@ export default class Profile extends React.Component {
       backgroundColor: Colors.squlptr
     },
     headerTintColor: '#fff'
-  };
+  });
 
   state = {
     isEditing: false,

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Feather, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { DrawerActions } from 'react-navigation';
 import Colors from '../../constants/Colors';
 import LogoTitle from '../../components/LogoTitle';
 import Pill from '../../components/Pill';
@@ -19,7 +20,7 @@ import { SwitchIcon } from '../../assets/icons';
 const { width, height } = Dimensions.get('window');
 
 export default class Favourite extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation, screenProps }) => ({
     headerTitle: <LogoTitle />,
     headerRight: (
       <TouchableOpacity style={{ marginRight: 25 }}>
@@ -27,7 +28,12 @@ export default class Favourite extends React.Component {
       </TouchableOpacity>
     ),
     headerLeft: (
-      <TouchableOpacity style={{ marginLeft: 25 }}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.dispatch(DrawerActions.openDrawer());
+        }}
+        style={{ marginLeft: 25 }}
+      >
         <Feather name="align-left" color="#fff" size={25} />
       </TouchableOpacity>
     ),
@@ -35,7 +41,7 @@ export default class Favourite extends React.Component {
       backgroundColor: Colors.squlptr
     },
     headerTintColor: '#fff'
-  };
+  });
 
   state = {
     favourites: [
@@ -101,7 +107,7 @@ export default class Favourite extends React.Component {
       }
     ],
     isImageSelected: false,
-    imageToDisplay: ''
+    imageToDisplay: null
   };
 
   handleSelectImage = fav => {
@@ -117,8 +123,16 @@ export default class Favourite extends React.Component {
     });
   };
 
-  handleSwitch = () => {
-    this.setState({ isImageSelected: false });
+  handleSwitch = img => {
+    let { favourites, imageToDisplay } = this.state;
+    let _id = imageToDisplay.id;
+    if (_id === favourites.length) {
+      _id = 0;
+    }
+    _id += 1;
+    _favourites = favourites.filter(value => value.id === _id);
+
+    this.setState({ imageToDisplay: _favourites[0] });
   };
 
   render() {
@@ -179,7 +193,7 @@ export default class Favourite extends React.Component {
               }}
             >
               <TouchableOpacity
-                onPress={this.handleSwitch}
+                onPress={() => this.handleSwitch(this.state.imageToDisplay)}
                 style={{ height: 22, width: 22 }}
               >
                 <Image
@@ -204,7 +218,7 @@ export default class Favourite extends React.Component {
 
 const ViewImage = styled.TouchableOpacity`
   width: 95%;
-  height: ${height / 2};
+  height: ${height / 1.5};
   border-radius: 5px;
   align-self: center;
   overflow: hidden;
