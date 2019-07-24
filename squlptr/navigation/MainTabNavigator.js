@@ -14,6 +14,7 @@ import Appointments from '../screens/Appointments';
 import Colors from '../constants/Colors';
 import Profile from '../screens/Profile';
 import Favourite from '../screens/Favourite';
+import SwipeGallery from '../screens/SwipeGallery';
 import {
   Feather,
   MaterialIcons,
@@ -67,7 +68,7 @@ PhotoStack.navigationOptions = {
 };
 
 const FabStack = createStackNavigator({
-  Links: Appointments
+  Links: SwipeGallery
 });
 
 FabStack.navigationOptions = {
