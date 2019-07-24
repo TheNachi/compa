@@ -3,12 +3,13 @@ import styled from 'styled-components/native';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { DrawerActions } from 'react-navigation';
 import Colors from '../../constants/Colors';
 import DocCard from '../../components/DocCard';
 import LogoTitle from '../../components/LogoTitle';
 
 export default class Appointments extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation, screenProps }) => ({
     headerTitle: <LogoTitle />,
     headerRight: (
       <TouchableOpacity style={{ marginRight: 25 }}>
@@ -16,7 +17,12 @@ export default class Appointments extends React.Component {
       </TouchableOpacity>
     ),
     headerLeft: (
-      <TouchableOpacity style={{ marginLeft: 25 }}>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.dispatch(DrawerActions.openDrawer());
+        }}
+        style={{ marginLeft: 25 }}
+      >
         <Feather name="align-left" color="#fff" size={25} />
       </TouchableOpacity>
     ),
@@ -24,7 +30,7 @@ export default class Appointments extends React.Component {
       backgroundColor: Colors.squlptr
     },
     headerTintColor: '#fff'
-  };
+  });
   render() {
     let { navigate } = this.props.navigation;
     return (
