@@ -1,24 +1,34 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components/native';
-import Svg, { Defs, Rect, ClipPath } from 'react-native-svg';
+import Svg, { Defs, Rect, ClipPath, Image as SvgImage } from 'react-native-svg';
 
-export default ({ visible, beforeSrc, AfterSrc }) => (
-  <ImageComparerContainer>
-    <BeforeImage />
+export default class ImageComparer extends Component {
 
-    <AfterImage>
-      <Svg width="100%" height="100%" key={visible}>
-        <Defs>
-          <ClipPath id="visible">
-            <Rect x={visible} y={0} width="100%" height="100%"></Rect>
-          </ClipPath>
-        </Defs>
-        <Rect x="0" y="0" width="100%" height="100%" fill="green" clipPath="url(#visible)"></Rect>
-      </Svg>
-    </AfterImage>
+  render() {
+    const { visible, beforeSrc, afterSrc } = this.props;
+    return (
+      <ImageComparerContainer>
+        <BeforeImage>
+          <Svg width="100%" height="100%" key={-1}>
+            <SvgImage href={beforeSrc} x="0" y="0" width="100%" height="100%"></SvgImage>
+          </Svg>
+        </BeforeImage>
 
-  </ImageComparerContainer>
-);
+        <AfterImage>
+          <Svg width="100%" height="100%" key={visible}>
+            <Defs>
+              <ClipPath id="visible">
+                <Rect x={visible} y={0} width="100%" height="100%"></Rect>
+              </ClipPath>
+            </Defs>
+            <SvgImage href={afterSrc} x="0" y="0" width="100%" height="100%" clipPath="url(#visible)"></SvgImage>
+          </Svg>
+        </AfterImage>
+
+      </ImageComparerContainer>
+    );
+  }
+}
 
 const ImageComparerContainer = styled.View`
   position: relative;
@@ -26,6 +36,7 @@ const ImageComparerContainer = styled.View`
   height: 100%;
   border-radius: 13px;
   overflow: hidden;
+  background: black;
 `;
 
 const imageStyle = `
@@ -38,8 +49,7 @@ const imageStyle = `
 
 const BeforeImage = styled.View`
   ${imageStyle}
-  z-index: 99;
-  background-color: blue;
+  z-index: 996;
 `;
 
 const AfterImage = styled.View`

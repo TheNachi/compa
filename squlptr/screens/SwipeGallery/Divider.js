@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
-import { Feather } from '@expo/vector-icons';
 import { PanResponder } from 'react-native';
 
 export default class Divider extends Component {
@@ -27,8 +26,6 @@ export default class Divider extends Component {
 
         return true;
       },
-      onMoveShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
       onPanResponderMove: (event, gestureState) => {
         let { x, startX } = this.state;
         
@@ -65,7 +62,7 @@ const DividerLineOuter = styled.View`
   top: 0;
   bottom: 0;
   width: 2px;
-  z-index: 9999;
+  z-index: 9999999999;
 `;
 
 const DraggerWrapper = styled.View`
@@ -76,17 +73,17 @@ const DraggerWrapper = styled.View`
 
 const Dragger = styled.View`
   position: absolute;
-  height: 50px;
-  width: 6px;
+  height: 70px;
+  width: 60px;
   top: 50%;
-  left: -2px;
-  background: black;
+  left: -29px;
   display: flex;
   flex-direction: row;
+  justify-content: center;
 `;
 
 const DraggerLine = styled.View`
-  width: 6px;
-  height: 50px;
+  width: 8px;
+  height: 70px;
   background: #fff;
 `;
