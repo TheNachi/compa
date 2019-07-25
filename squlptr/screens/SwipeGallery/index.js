@@ -66,13 +66,24 @@ export default class SwipingGallery extends Component {
     });
   }
 
-  onSwipingStopped() {
+  onSwipingStopped(actionToPerform) {
     const { cardSliderTranslate } = this.state;
+
+    if (Math.abs(cardSliderTranslate.__getValue().x) > SCREEN_WIDTH/2) {
+      this.removeDisplayedPicture();
+    }
 
     cardSliderTranslate.setValue({
       x: 0,
       y: cardSliderTranslate.y,
     });
+  }
+
+  removeDisplayedPicture() {
+    const { pictures } = this.state;
+    pictures.shift();
+
+    this.setState({ pictures });
   }
 
   getCard(currentPicture, currentIndex, picturesLength) {
@@ -109,7 +120,7 @@ export default class SwipingGallery extends Component {
           afterImageSrc={currentPicture.after}
           style={styles.card}
           touchListener={(dx) => this.onSwiping(dx)}
-          releaseListener={() => this.onSwipingStopped()}
+          releaseListener={(actionToPerform) => this.onSwipingStopped(actionToPerform)}
         />
       </Animated.View>
     )
@@ -121,7 +132,7 @@ export default class SwipingGallery extends Component {
     return (
       <SwipingGalleryContainer>
         <CardsContainer>
-          {pictures.map((picture, index) => this.getCard(picture, index, pictures.length))}
+          {[...pictures].reverse().map((picture, index) => this.getCard(picture, index, pictures.length))}
         </CardsContainer>
         <View>
           <PictureActionButtons>

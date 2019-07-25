@@ -6,11 +6,12 @@ export default class ImageComparer extends Component {
 
   render() {
     const { visible, beforeSrc, afterSrc } = this.props;
+    
     return (
       <ImageComparerContainer>
         <BeforeImage>
-          <Svg width="100%" height="100%" key={-1}>
-            <SvgImage href={beforeSrc} x="0" y="0" width="100%" height="100%"></SvgImage>
+          <Svg width="100%" height="100%">
+            <SvgImage href={beforeSrc} x={0} y={0} width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />
           </Svg>
         </BeforeImage>
 
@@ -21,7 +22,7 @@ export default class ImageComparer extends Component {
                 <Rect x={visible} y={0} width="100%" height="100%"></Rect>
               </ClipPath>
             </Defs>
-            <SvgImage href={afterSrc} x="0" y="0" width="100%" height="100%" clipPath="url(#visible)"></SvgImage>
+            <SvgImage href={afterSrc} x="0" y="0" width="100%" height="100%" clipPath="url(#visible)" preserveAspectRatio="xMidYMid slice"></SvgImage>
           </Svg>
         </AfterImage>
 

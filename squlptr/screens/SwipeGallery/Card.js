@@ -7,7 +7,7 @@ import Divider from './Divider';
 
 export default class Card extends Component {
   state = {
-    visible: 50,
+    visible: 90,
     isSwiping: false,
     actionToPerform: null,
   };
@@ -25,7 +25,9 @@ export default class Card extends Component {
   }
 
   releaseListener() {
-    this.props.releaseListener();
+    const { actionToPerform } = this.state;
+
+    this.props.releaseListener(actionToPerform);
 
     this.setState({ isSwiping: false, actionToPerform: null });
   }
@@ -51,7 +53,7 @@ export default class Card extends Component {
   render() {
     const { visible, isSwiping, actionToPerform } = this.state;
 
-    const { style, beforeImageSrC, afterImageSrc } = this.props;
+    const { style, beforeImageSrc, afterImageSrc } = this.props;
 
     return (
       <CardContainer style={style}> 
@@ -76,7 +78,7 @@ export default class Card extends Component {
         {!isSwiping && (
           <ImageComparer
             visible={visible}
-            beforeSrc={beforeImageSrC}
+            beforeSrc={beforeImageSrc}
             afterSrc={afterImageSrc}
           />
         )}
@@ -111,6 +113,7 @@ const AfterText = styled.Text`
   right: 20px;
   z-index: 99999;
   font-size: 16px;
+  font-weight: bold;
 `;
 
 const SwipeEventView = styled.View`
