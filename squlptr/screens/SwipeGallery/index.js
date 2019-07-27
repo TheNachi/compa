@@ -70,10 +70,10 @@ export default class SwipingGallery extends Component {
     cardSliderTranslate.setValue({ x, y });
   }
 
-  onSwipingStopped(actionToPerform) {
+  onSwipingStopped(actionToPerform) { console.log(actionToPerform);
     const { cardSliderTranslate } = this.state;
 
-    if (Math.abs(cardSliderTranslate.__getValue().x) > SCREEN_WIDTH/2) {
+    if (actionToPerform) {
       this.removeDisplayedPicture();
     }
 

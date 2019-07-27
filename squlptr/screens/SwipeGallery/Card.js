@@ -6,6 +6,7 @@ import ImageComparer from './ImageComparer';
 import Divider from './Divider';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export default class Card extends Component {
   state = {
@@ -38,7 +39,10 @@ export default class Card extends Component {
     this.props.touchListener(dx, dy, moveY);
 
     let actionToPerform = null;
-    if (Math.abs(dx) >= (SCREEN_WIDTH / 4)) {
+
+    if (dy <= (SCREEN_HEIGHT*0.38)*-1) {
+      actionToPerform = 'favorite';
+    } else if (Math.abs(dx) >= (SCREEN_WIDTH / 4)) {
       if (dx < 0) {
         actionToPerform = 'dislike';
       } else if (dx > 0) {
