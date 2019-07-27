@@ -57,13 +57,17 @@ export default class SwipingGallery extends Component {
     cardSliderTranslate: new Animated.ValueXY(),
   }
 
-  onSwiping(dx) {
+  onSwiping(dx, dy, moveY) {
     const { cardSliderTranslate } = this.state;
 
-    cardSliderTranslate.setValue({
-      x: dx,
-      y: cardSliderTranslate.y,
-    });
+    const x = dx;
+    let y = 0;
+
+    if (this.cardsHeight + dy < this.cardsHeight) {
+      y = dy;
+    }
+
+    cardSliderTranslate.setValue({ x, y });
   }
 
   onSwipingStopped(actionToPerform) {
@@ -75,7 +79,7 @@ export default class SwipingGallery extends Component {
 
     cardSliderTranslate.setValue({
       x: 0,
-      y: cardSliderTranslate.y,
+      y: 0,
     });
   }
 
@@ -107,6 +111,9 @@ export default class SwipingGallery extends Component {
               translateX: cardSliderTranslate.x,
             },
             {
+              translateY: cardSliderTranslate.y,
+            },
+            {
               rotate: cardSliderTranslate.x.interpolate({
                 inputRange: [-SCREEN_WIDTH/2, 0, SCREEN_WIDTH/2],
                 outputRange: ['-10deg', '0deg', '10deg'],
@@ -116,10 +123,11 @@ export default class SwipingGallery extends Component {
         }}
       >
         <Card
+          ref={(ref) => this.currentSwipableCard = ref}
           beforeImageSrc={currentPicture.before}
           afterImageSrc={currentPicture.after}
           style={styles.card}
-          touchListener={(dx) => this.onSwiping(dx)}
+          touchListener={(dx, dy, moveY) => this.onSwiping(dx, dy, moveY)}
           releaseListener={(actionToPerform) => this.onSwipingStopped(actionToPerform)}
         />
       </Animated.View>
@@ -131,7 +139,10 @@ export default class SwipingGallery extends Component {
 
     return (
       <SwipingGalleryContainer>
-        <CardsContainer>
+        <CardsContainer
+          ref={(ref) => this.cardsContainer = ref}
+          onLayout={(evt) => this.cardsHeight = evt.nativeEvent.layout.height}
+        >
           {[...pictures].reverse().map((picture, index) => this.getCard(picture, index, pictures.length))}
         </CardsContainer>
         <View>
@@ -159,6 +170,7 @@ export default class SwipingGallery extends Component {
 
 const SwipingGalleryContainer = styled.View`
   padding: 10px 8px  0 8px;
+  height: 100%;
 `;
 
 const PictureActionButtons = styled.View`
@@ -171,7 +183,7 @@ const PictureActionButtons = styled.View`
 
 const CardsContainer = styled.View`
   position: relative;
-  height: 500px;
+  height: 75%;
 `;
 
 const pictureActionBtnStyle = {

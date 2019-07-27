@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Feather } from '@expo/vector-icons';
-import { View, Image, PanResponder, StyleSheet } from 'react-native';
+import { View, Image, PanResponder, StyleSheet, Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 import ImageComparer from './ImageComparer';
 import Divider from './Divider';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default class Card extends Component {
   state = {
@@ -15,7 +17,7 @@ export default class Card extends Component {
   componentWillMount() {
     this.pan = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gestureState) => this.touchListener(gestureState.dx),
+      onPanResponderMove: (event, gestureState) => this.touchListener(gestureState.dx, gestureState.dy),
       onPanResponderRelease: (event, gestureState) => this.releaseListener(),
     });
   }
@@ -32,14 +34,16 @@ export default class Card extends Component {
     this.setState({ isSwiping: false, actionToPerform: null });
   }
 
-  touchListener(dx) {
-    this.props.touchListener(dx);
+  touchListener(dx, dy, moveY) {
+    this.props.touchListener(dx, dy, moveY);
 
     let actionToPerform = null;
-    if (dx < 0) {
-      actionToPerform = 'dislike';
-    } else if (dx > 0) {
-      actionToPerform = 'like';
+    if (Math.abs(dx) >= (SCREEN_WIDTH / 4)) {
+      if (dx < 0) {
+        actionToPerform = 'dislike';
+      } else if (dx > 0) {
+        actionToPerform = 'like';
+      }
     }
 
     let { isSwiping } = this.state;
