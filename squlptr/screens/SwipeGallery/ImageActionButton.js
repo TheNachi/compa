@@ -15,8 +15,13 @@ export default class Button extends Component {
   }
 
   render() {
-    const { style, activeStyle, children } = this.props;
+    const { style, activeStyle, onClick, children } = this.props;
     const { pressed } = this.state;
+
+    const optionalProps = {};
+    if (onClick) {
+      optionalProps.onPress = onClick;
+    }
 
     return (
       <TouchableOpacity
@@ -24,6 +29,7 @@ export default class Button extends Component {
         activeOpacity={1}
         onPressOut={() => this.onPressOut()}
         onPressIn={() => this.onPressIn()}
+        {...optionalProps}
       >
         {children}
       </TouchableOpacity>

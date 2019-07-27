@@ -16,6 +16,7 @@ import CardNoSlider from './CardNoSlider';
 import CustomButton from './ImageActionButton';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export default class SwipingGallery extends Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
@@ -53,6 +54,11 @@ export default class SwipingGallery extends Component {
         before: require('../../assets/images/samples/picture2-before.jpg'),
         after: require('../../assets/images/samples/picture2-after.jpg'),
       },
+      {
+        id: 3,
+        before: require('../../assets/images/samples/picture2-before.jpg'),
+        after: require('../../assets/images/samples/picture2-after.jpg'),
+      },
     ],
     cardSliderTranslate: new Animated.ValueXY(),
   }
@@ -70,7 +76,7 @@ export default class SwipingGallery extends Component {
     cardSliderTranslate.setValue({ x, y });
   }
 
-  onSwipingStopped(actionToPerform) { console.log(actionToPerform);
+  onSwipingStopped(actionToPerform) {
     const { cardSliderTranslate } = this.state;
 
     if (actionToPerform) {
@@ -81,6 +87,36 @@ export default class SwipingGallery extends Component {
       x: 0,
       y: 0,
     });
+  }
+
+  autoSwipeLeft() {
+    Animated.timing(
+      this.state.cardSliderTranslate.x,
+      {
+        toValue: (SCREEN_WIDTH*0.9)*-1,
+        duration: 300,
+      }
+    ).start(() => this.onSwipingStopped('dislike'));
+  }
+
+  autoSwipeRight() {
+    Animated.timing(
+      this.state.cardSliderTranslate.x,
+      {
+        toValue: (SCREEN_WIDTH*0.9),
+        duration: 300,
+      }
+    ).start(() => this.onSwipingStopped('like'));
+  }
+
+  autoSwipeUp() {
+    Animated.timing(
+      this.state.cardSliderTranslate.y,
+      {
+        toValue: (SCREEN_HEIGHT*0.8)*-1,
+        duration: 300,
+      }
+    ).start(() => this.onSwipingStopped('favorite'));
   }
 
   removeDisplayedPicture() {
@@ -147,15 +183,15 @@ export default class SwipingGallery extends Component {
         </CardsContainer>
         <View>
           <PictureActionButtons>
-            <CustomButton style={styles.dislikeButton} activeStyle={styles.dislikeButtonActive}>
+            <CustomButton style={styles.dislikeButton} activeStyle={styles.dislikeButtonActive} onClick={() => this.autoSwipeLeft()}>
               <Feather name="x" size={35} color="#c00" />
             </CustomButton>
 
-            <TouchableOpacity>
+            <CustomButton onClick={() => this.autoSwipeUp()}>
               <MaterialIcons name="star" size={20} color="#C4C4C4" />
-            </TouchableOpacity>
+            </CustomButton>
 
-            <CustomButton style={styles.likeButton} activeStyle={styles.likeButtonActive}>
+            <CustomButton style={styles.likeButton} activeStyle={styles.likeButtonActive} onClick={() => this.autoSwipeRight()}>
               <Feather name="check" size={35} color="#27AE60" />
             </CustomButton>
           </PictureActionButtons>
