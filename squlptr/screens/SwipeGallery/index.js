@@ -93,8 +93,8 @@ export default class SwipingGallery extends Component {
     Animated.timing(
       this.state.cardSliderTranslate.x,
       {
-        toValue: (SCREEN_WIDTH*0.9)*-1,
-        duration: 300,
+        toValue: (SCREEN_WIDTH)*-1,
+        duration: 600,
       }
     ).start(() => this.onSwipingStopped('dislike'));
   }
@@ -103,8 +103,8 @@ export default class SwipingGallery extends Component {
     Animated.timing(
       this.state.cardSliderTranslate.x,
       {
-        toValue: (SCREEN_WIDTH*0.9),
-        duration: 300,
+        toValue: (SCREEN_WIDTH),
+        duration: 600,
       }
     ).start(() => this.onSwipingStopped('like'));
   }
@@ -114,7 +114,11 @@ export default class SwipingGallery extends Component {
       this.state.cardSliderTranslate.y,
       {
         toValue: (SCREEN_HEIGHT*0.8)*-1,
+<<<<<<< HEAD
         duration: 450,
+=======
+        duration: 750,
+>>>>>>> 8de905e11da1ffda60b000169658a091e5409a78
       }
     ).start(() => this.onSwipingStopped('favorite'));
   }
@@ -219,7 +223,7 @@ const PictureActionButtons = styled.View`
 
 const CardsContainer = styled.View`
   position: relative;
-  height: 75%;
+  height: 85%;
 `;
 
 const pictureActionBtnStyle = {
