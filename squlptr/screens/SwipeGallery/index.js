@@ -114,11 +114,7 @@ export default class SwipingGallery extends Component {
       this.state.cardSliderTranslate.y,
       {
         toValue: (SCREEN_HEIGHT*0.8)*-1,
-<<<<<<< HEAD
-        duration: 450,
-=======
         duration: 750,
->>>>>>> 8de905e11da1ffda60b000169658a091e5409a78
       }
     ).start(() => this.onSwipingStopped('favorite'));
   }
