@@ -219,7 +219,7 @@ const PictureActionButtons = styled.View`
 
 const CardsContainer = styled.View`
   position: relative;
-  height: 85%;
+  height: 80%;
 `;
 
 const pictureActionBtnStyle = {

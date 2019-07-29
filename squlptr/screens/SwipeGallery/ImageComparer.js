@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components/native';
-import Svg, { Defs, Rect, ClipPath, Image as SvgImage } from 'react-native-svg';
+import { View } from 'react-native';
 
 export default class ImageComparer extends Component {
 
@@ -10,20 +10,27 @@ export default class ImageComparer extends Component {
     return (
       <ImageComparerContainer>
         <BeforeImage>
-          <Svg width="100%" height="100%">
-            <SvgImage href={beforeSrc} x={0} y={0} width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />
-          </Svg>
+          <Image source={beforeSrc} />
+          <BeforeText>BEFORE</BeforeText>
         </BeforeImage>
 
-        <AfterImage>
-          <Svg width="100%" height="100%" key={visible}>
-            <Defs>
-              <ClipPath id="visible">
-                <Rect x={visible} y={0} width="100%" height="100%"></Rect>
-              </ClipPath>
-            </Defs>
-            <SvgImage href={afterSrc} x="0" y="0" width="100%" height="100%" clipPath="url(#visible)" preserveAspectRatio="xMidYMid slice"></SvgImage>
-          </Svg>
+        <AfterImage
+          style={{
+            left: visible,
+          }}
+        >
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: visible*-1,
+              right: 0,
+              bottom: 0,
+            }}
+          >
+            <Image source={afterSrc} />
+            <AfterText>AFTER</AfterText>
+          </View>
         </AfterImage>
 
       </ImageComparerContainer>
@@ -37,13 +44,17 @@ const ImageComparerContainer = styled.View`
   height: 100%;
   border-radius: 13px;
   overflow: hidden;
-  background: black;
 `;
 
 const imageStyle = `
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
+  height: 100%;
+`;
+
+const Image = styled.Image`
   width: 100%;
   height: 100%;
 `;
@@ -55,5 +66,25 @@ const BeforeImage = styled.View`
 
 const AfterImage = styled.View`
   ${imageStyle}
+  overflow: hidden;
   z-index: 999;
+`;
+
+const compareTextStyle = `
+  color: #fff;
+  position: absolute;
+  bottom: 15px;
+  z-index: 99999;
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const BeforeText = styled.Text`
+  ${compareTextStyle}
+  left: 20px;
+`;
+
+const AfterText = styled.Text`
+  ${compareTextStyle}
+  right: 20px;
 `;

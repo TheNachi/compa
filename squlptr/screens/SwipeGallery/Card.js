@@ -99,9 +99,6 @@ export default class Card extends Component {
             onDraggerMove={(x) => this.onDraggerMove(x)}
           />
         )}
-        {!isSwiping && (
-          <AfterText>AFTER</AfterText>
-        )}
       </CardContainer>
     );
   }
@@ -111,17 +108,7 @@ const CardContainer = styled.View`
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 12px;
-`;
-
-const AfterText = styled.Text`
-  color: #fff;
-  position: absolute;
-  bottom: 15px;
-  right: 20px;
-  z-index: 99999;
-  font-size: 16px;
-  font-weight: bold;
+  border-radius: 13px;
 `;
 
 const SwipeEventView = styled.View`
