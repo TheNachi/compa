@@ -18,44 +18,20 @@ export default class Card extends Component {
   componentWillMount() {
     this.pan = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (event, gestureState) => this.touchListener(gestureState.dx, gestureState.dy),
-      onPanResponderRelease: (event, gestureState) => this.releaseListener(),
+      onPanResponderMove: (event, gestureState) => this.props.touchListener(gestureState.dx, gestureState.dy),
+      onPanResponderRelease: (event, gestureState) => this.props.releaseListener(),
     });
+  }
+
+  componentWillReceiveProps(props) {
+    if (props) {
+      const { actionToPerform, isSwiping } = props;
+      this.setState({ actionToPerform, isSwiping });
+    }
   }
 
   onDraggerMove(newX) {
     this.setState({ visible: newX });
-  }
-
-  releaseListener() {
-    const { actionToPerform } = this.state;
-
-    this.props.releaseListener(actionToPerform);
-
-    this.setState({ isSwiping: false, actionToPerform: null });
-  }
-
-  touchListener(dx, dy, moveY) {
-    this.props.touchListener(dx, dy, moveY);
-
-    let actionToPerform = null;
-
-    if (dy <= (SCREEN_HEIGHT*0.38)*-1) {
-      actionToPerform = 'favorite';
-    } else if (Math.abs(dx) >= (SCREEN_WIDTH / 4)) {
-      if (dx < 0) {
-        actionToPerform = 'dislike';
-      } else if (dx > 0) {
-        actionToPerform = 'like';
-      }
-    }
-
-    let { isSwiping } = this.state;
-    if (!isSwiping) {
-      isSwiping = true;
-    }
-
-    this.setState({ isSwiping, actionToPerform });
   }
 
   render() {
