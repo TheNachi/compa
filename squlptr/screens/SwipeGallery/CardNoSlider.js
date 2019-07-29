@@ -12,9 +12,8 @@ export default ({ afterImageSrc, style }) => {
 const CardContainer = styled.View`
   width: 100%;
   height: 100%;
-  border-radius: 12px;
+  border-radius: 13px;
   overflow: hidden;
-  background: black;
 `;
 
 const AfterImage = styled.Image`

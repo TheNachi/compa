@@ -46,8 +46,8 @@ export default class SwipingGallery extends Component {
     pictures: [
       {
         id: 1,
-        before: require('../../assets/images/samples/picture1-before.jpg'),
-        after: require('../../assets/images/samples/picture1-after.jpg'),
+        before: require('../../assets/images/samples/picture3-before.jpg'),
+        after: require('../../assets/images/samples/picture3-after.jpg'),
       },
       {
         id: 2,
@@ -56,14 +56,46 @@ export default class SwipingGallery extends Component {
       },
       {
         id: 3,
+        before: require('../../assets/images/samples/picture1-before.jpg'),
+        after: require('../../assets/images/samples/picture1-after.jpg'),
+      },
+      {
+        id: 4,
         before: require('../../assets/images/samples/picture2-before.jpg'),
         after: require('../../assets/images/samples/picture2-after.jpg'),
       },
     ],
     cardSliderTranslate: new Animated.ValueXY(),
+    actionToPerform: null,
+    isSwiping: false,
   }
 
-  onSwiping(dx, dy, moveY) {
+  componentDidMount() {
+    const { cardSliderTranslate } = this.state;
+
+    // On x movement.
+    cardSliderTranslate.x.addListener(() => this.onTranslateChange());
+    // On y movement.
+    cardSliderTranslate.y.addListener(() => this.onTranslateChange());
+  }
+
+  onTranslateChange() {
+    let { cardSliderTranslate, isSwiping } = this.state;
+    let actionToPerform = null;
+
+    const { x, y } = cardSliderTranslate.__getValue();
+    if (y <= (SCREEN_HEIGHT*0.38)*-1) {
+      actionToPerform = 'favorite';
+    } else if (Math.abs(x) >= (SCREEN_WIDTH / 4)) {
+      actionToPerform = x < 0 ? 'dislike' : 'like';
+    }
+
+    isSwiping = x != 0 || y != 0;
+
+    this.setState({ actionToPerform, isSwiping });
+  }
+
+  onSwiping(dx, dy) {
     const { cardSliderTranslate } = this.state;
 
     const x = dx;
@@ -76,8 +108,8 @@ export default class SwipingGallery extends Component {
     cardSliderTranslate.setValue({ x, y });
   }
 
-  onSwipingStopped(actionToPerform) {
-    const { cardSliderTranslate } = this.state;
+  onSwipingStopped() {
+    const { cardSliderTranslate, actionToPerform } = this.state;
 
     if (actionToPerform) {
       this.removeDisplayedPicture();
@@ -90,6 +122,10 @@ export default class SwipingGallery extends Component {
   }
 
   autoSwipeLeft() {
+    if (this.state.isSwiping) {
+      return false; // Prevent the button from working when the image is auto animating to prevent unexpected results.
+    }
+
     Animated.timing(
       this.state.cardSliderTranslate.x,
       {
@@ -100,6 +136,10 @@ export default class SwipingGallery extends Component {
   }
 
   autoSwipeRight() {
+    if (this.state.isSwiping) {
+      return false; // Prevent the button from working when the image is auto animating to prevent unexpected results.
+    }
+
     Animated.timing(
       this.state.cardSliderTranslate.x,
       {
@@ -110,6 +150,10 @@ export default class SwipingGallery extends Component {
   }
 
   autoSwipeUp() {
+    if (this.state.isSwiping) {
+      return false; // Prevent the button from working when the image is auto animating to prevent unexpected results.
+    }
+
     Animated.timing(
       this.state.cardSliderTranslate.y,
       {
@@ -127,7 +171,7 @@ export default class SwipingGallery extends Component {
   }
 
   getCard(currentPicture, currentIndex, picturesLength) {
-    const { cardSliderTranslate } = this.state;
+    const { cardSliderTranslate, actionToPerform, isSwiping } = this.state;
 
     return (currentIndex < picturesLength - 1) ? (
       <CardNoSlider
@@ -163,8 +207,10 @@ export default class SwipingGallery extends Component {
           beforeImageSrc={currentPicture.before}
           afterImageSrc={currentPicture.after}
           style={styles.card}
-          touchListener={(dx, dy, moveY) => this.onSwiping(dx, dy, moveY)}
-          releaseListener={(actionToPerform) => this.onSwipingStopped(actionToPerform)}
+          touchListener={(dx, dy) => this.onSwiping(dx, dy)}
+          releaseListener={() => this.onSwipingStopped()}
+          actionToPerform={actionToPerform}
+          isSwiping={isSwiping}
         />
       </Animated.View>
     )
@@ -172,6 +218,14 @@ export default class SwipingGallery extends Component {
 
   render() {
     const { pictures } = this.state;
+
+    if (pictures.length == 0) {
+      return (
+        <Text style={{
+          padding: 20
+        }}>Hi there! based on your choices, I will be your surgeon.</Text>
+      );
+    }
 
     return (
       <SwipingGalleryContainer>
@@ -219,7 +273,7 @@ const PictureActionButtons = styled.View`
 
 const CardsContainer = styled.View`
   position: relative;
-  height: 85%;
+  height: 80%;
 `;
 
 const pictureActionBtnStyle = {
