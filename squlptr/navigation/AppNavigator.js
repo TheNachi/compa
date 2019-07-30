@@ -16,7 +16,7 @@ import MainTabNavigator, {
   ChatStack,
   HelpStack,
   ProfileStack,
-  PhotoStack
+  // PhotoStack
 } from './MainTabNavigator';
 import Register from '../screens/Login';
 import PhoneNumber from '../screens/Auth/Phone/PhoneNumber';
@@ -108,7 +108,7 @@ const AuthNavigator = createStackNavigator(
 const AppDrawerNavigator = createDrawerNavigator(
   {
     Home: { screen: MainTabNavigator },
-    'My Photos': PhotoStack,
+    // 'My Photos': PhotoStack,
     Favourites: FavoriteStack,
     Appointments: AppointmentStack,
     Chat: ChatStack,

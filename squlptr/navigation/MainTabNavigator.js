@@ -55,19 +55,19 @@ FavoriteStack.navigationOptions = {
   drawerIcon: () => <MaterialCommunityIcons name="heart-outline" size={20} />
 };
 
-export const PhotoStack = createStackNavigator({
-  Links: Favourite
-});
+// export const PhotoStack = createStackNavigator({
+//   Links: Favourite
+// });
 
-PhotoStack.navigationOptions = {
-  tabBarLabel: 'Favourite',
-  tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="heart" />,
-  drawerLabel: 'My Photos',
-  drawerIcon: () => <Feather name="user" size={20} />
-};
+// PhotoStack.navigationOptions = {
+//   tabBarLabel: 'Favourite',
+//   tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="heart" />,
+//   drawerLabel: 'My Photos',
+//   drawerIcon: () => <Feather name="user" size={20} />
+// };
 
 const FabStack = createStackNavigator({
-  Links: Appointments
+  Links: () => null
 });
 
 FabStack.navigationOptions = {
