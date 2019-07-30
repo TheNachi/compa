@@ -24,6 +24,7 @@ import ConfirmCode from '../screens/Auth/Phone/ConfirmCode';
 import BuildProfile from '../screens/BuildProfile';
 import Home from '../screens/Home';
 import Appointments from '../screens/Appointments';
+import Matches from '../screens/Matches';
 import Colors from '../constants/Colors';
 import Button from '../components/Button';
 
@@ -101,6 +102,12 @@ const AuthNavigator = createStackNavigator(
   // { initialRouteName: 'ConfirmCodeScreen' }
 );
 
+const MatchesNavigator = createStackNavigator(
+  {
+    MatchesScreen: Matches,
+  }
+);
+
 // const AppNavigator = createDrawerNavigator({
 //   AppointmentsScreen: Appointments,
 //   HomeScreen: Home
@@ -113,7 +120,7 @@ const AppDrawerNavigator = createDrawerNavigator(
     Appointments: AppointmentStack,
     Chat: ChatStack,
     Help: HelpStack,
-    Settings: ProfileStack
+    Settings: ProfileStack,
   },
   {
     hideStatusBar: true,
@@ -133,7 +140,9 @@ export default createAppContainer(
       // App: AppNavigator,
       // You could add another route here for authentication.
       // Read more at https://reactnavigation.org/docs/en/auth-flow.html
-      Main: AppDrawerNavigator
+      Main: AppDrawerNavigator,
+
+      Matches: MatchesNavigator,
     },
     { initialRouteName: 'Main' }
   )

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   createStackNavigator,
+  createSwitchNavigator,
   createBottomTabNavigator,
   createDrawerNavigator
 } from 'react-navigation';
@@ -15,6 +16,7 @@ import Colors from '../constants/Colors';
 import Profile from '../screens/Profile';
 import Favourite from '../screens/Favourite';
 import SwipeGallery from '../screens/SwipeGallery';
+import Matches from '../screens/Matches';
 import {
   Feather,
   MaterialIcons,
@@ -68,7 +70,7 @@ PhotoStack.navigationOptions = {
 };
 
 const FabStack = createStackNavigator({
-  Links: SwipeGallery
+  Links: SwipeGallery,
 });
 
 FabStack.navigationOptions = {

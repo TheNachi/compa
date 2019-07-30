@@ -111,14 +111,14 @@ export default class SwipingGallery extends Component {
   onSwipingStopped() {
     const { cardSliderTranslate, actionToPerform } = this.state;
 
-    if (actionToPerform) {
-      this.removeDisplayedPicture();
-    }
-
     cardSliderTranslate.setValue({
       x: 0,
       y: 0,
     });
+
+    if (actionToPerform) {
+      this.removeDisplayedPicture();
+    }
   }
 
   autoSwipeLeft() {
@@ -168,6 +168,13 @@ export default class SwipingGallery extends Component {
     pictures.shift();
 
     this.setState({ pictures });
+
+    // If there are no pictures left
+    if (pictures.length == 0) {
+      const { navigation } = this.props;
+
+      navigation.navigate('MatchesScreen');
+    }
   }
 
   getCard(currentPicture, currentIndex, picturesLength) {
@@ -218,14 +225,6 @@ export default class SwipingGallery extends Component {
 
   render() {
     const { pictures } = this.state;
-
-    if (pictures.length == 0) {
-      return (
-        <Text style={{
-          padding: 20
-        }}>Hi there! based on your choices, I will be your surgeon.</Text>
-      );
-    }
 
     return (
       <SwipingGalleryContainer>
