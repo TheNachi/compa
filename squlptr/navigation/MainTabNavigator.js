@@ -21,6 +21,9 @@ import {
   FontAwesome,
   SimpleLineIcons
 } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, Image, Dimensions } from 'react-native';
+
+const width = Dimensions.get('window').width;
 
 const HomeStack = createStackNavigator({
   Home: Home
@@ -72,9 +75,8 @@ const FabStack = createStackNavigator({
 
 FabStack.navigationOptions = {
   tabBarLabel: 'Fav',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name="dots-horizontal" />
-  ),
+  title: 'Fav',
+  tabBarIcon: focused => <AddButton focused={focused} />,
   drawerLabel: 'Fav',
   drawerIcon: () => <MaterialCommunityIcons name="pencil" size={20} />
 };
@@ -137,7 +139,6 @@ export default createBottomTabNavigator(
     FavoriteStack,
     ProfileStack
   },
-  // { initialRouteName: 'ProfileStack' },
   {
     resetOnBlur: true,
     tabBarOptions: {
@@ -148,3 +149,167 @@ export default createBottomTabNavigator(
     }
   }
 );
+
+class AddButton extends React.Component {
+  state = {
+    clicked: false
+  };
+  render() {
+    let { clicked } = this.state;
+    return (
+      <>
+        {clicked && (
+          <View
+            style={{
+              height: 55,
+              borderTopRightRadius: 50,
+              borderTopLeftRadius: 50,
+              borderBottomLeftRadius: 50,
+              borderBottomRightRadius: 50,
+              position: 'absolute',
+              width: width - 150,
+              top: -60,
+              left: -100,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              backgroundColor: '#FFEFE0',
+              flexDirection: 'row',
+              paddingHorizontal: 15
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: 50,
+                backgroundColor: Colors.squlptr,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <View>
+                <Image
+                  source={require('../assets/images/white-head.png')}
+                  style={{ width: 25, height: 25 }}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: 50,
+                backgroundColor: Colors.squlptr,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <View>
+                <Image
+                  source={require('../assets/images/white-breasts.png')}
+                  style={{ width: 25, height: 25 }}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: 50,
+                backgroundColor: Colors.squlptr,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <View>
+                <Image
+                  source={require('../assets/images/white-body.png')}
+                  style={{ width: 25, height: 25 }}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: 50,
+                backgroundColor: Colors.squlptr,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <View>
+                <Image
+                  source={require('../assets/images/white-non.png')}
+                  style={{ width: 25, height: 25 }}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+        <TouchableOpacity
+          onPress={() => this.setState({ clicked: !this.state.clicked })}
+          activeOpacity={1}
+          style={
+            clicked
+              ? {
+                  borderRadius: 50,
+                  height: 60,
+                  width: 60,
+                  backgroundColor: '#FFEFE0',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'absolute',
+                  top: -10
+                }
+              : {}
+          }
+        >
+          {clicked ? (
+            <>
+              <Image
+                style={{
+                  position: 'absolute',
+                  top: -1,
+                  right: 15,
+                  height: 40,
+                  zIndex: 1
+                }}
+                source={require('../assets/images/left-curve.png')}
+              />
+              <View
+                style={{
+                  borderRadius: 50,
+                  backgroundColor: '#fff',
+                  height: 40,
+                  width: 40,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  zIndex: 2
+                }}
+              >
+                <TabBarIcon name="x" />
+              </View>
+              <Image
+                style={{
+                  position: 'absolute',
+                  top: -1,
+                  left: 15,
+                  height: 30,
+                  zIndex: 1
+                }}
+                source={require('../assets/images/right-curve.png')}
+              />
+            </>
+          ) : (
+            <TabBarIcon name="dots-horizontal" />
+          )}
+        </TouchableOpacity>
+      </>
+    );
+  }
+}

@@ -15,7 +15,7 @@ import MainTabNavigator, {
   FavoriteStack,
   ChatStack,
   HelpStack,
-  ProfileStack,
+  ProfileStack
   // PhotoStack
 } from './MainTabNavigator';
 import Register from '../screens/Login';
@@ -118,7 +118,8 @@ const AppDrawerNavigator = createDrawerNavigator(
   {
     hideStatusBar: true,
     drawerBackgroundColor: 'transparent',
-    contentComponent: CustomDrawer
+    contentComponent: CustomDrawer,
+    hideTabBar: false
     // contentOptions: { itemsContainerStyle: { backgroundColor: 'red' } }
   }
 );
@@ -135,6 +136,6 @@ export default createAppContainer(
       // Read more at https://reactnavigation.org/docs/en/auth-flow.html
       Main: AppDrawerNavigator
     },
-    { initialRouteName: 'Main' }
+    { initialRouteName: 'Main', hideTabBar: false }
   )
 );
