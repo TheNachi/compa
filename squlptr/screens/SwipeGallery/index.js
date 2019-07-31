@@ -68,6 +68,7 @@ export default class SwipingGallery extends Component {
     cardSliderTranslate: new Animated.ValueXY(),
     actionToPerform: null,
     isSwiping: false,
+    isAutoSwiping: false,
   }
 
   componentDidMount() {
@@ -84,12 +85,12 @@ export default class SwipingGallery extends Component {
     let actionToPerform = null;
 
     const { x, y } = cardSliderTranslate.__getValue();
-    if (y <= (SCREEN_HEIGHT*0.38)*-1) {
+    if (y <= (SCREEN_HEIGHT*0.18)*-1) {
       actionToPerform = 'favorite';
     } else if (Math.abs(x) >= (SCREEN_WIDTH / 4)) {
       actionToPerform = x < 0 ? 'dislike' : 'like';
     }
-
+    
     isSwiping = x != 0 || y != 0;
 
     this.setState({ actionToPerform, isSwiping });
@@ -109,58 +110,76 @@ export default class SwipingGallery extends Component {
   }
 
   onSwipingStopped() {
-    const { cardSliderTranslate, actionToPerform } = this.state;
+    const { cardSliderTranslate, actionToPerform, isAutoSwiping } = this.state;
 
-    cardSliderTranslate.setValue({
-      x: 0,
-      y: 0,
-    });
+    cardSliderTranslate.setValue({ x: 0, y: 0, });
+    if (isAutoSwiping) {
+      this.setState({ isAutoSwiping: false, });
+    }
 
     if (actionToPerform) {
       this.removeDisplayedPicture();
     }
   }
 
-  autoSwipeLeft() {
-    if (this.state.isSwiping) {
-      return false; // Prevent the button from working when the image is auto animating to prevent unexpected results.
-    }
-
-    Animated.timing(
-      this.state.cardSliderTranslate.x,
-      {
-        toValue: (SCREEN_WIDTH)*-1,
-        duration: 600,
+  onSwipeCardTouchRelease() {
+    const { cardSliderTranslate, actionToPerform } = this.state;
+    
+    if (actionToPerform) {
+      const translateValue = cardSliderTranslate.__getValue();
+      
+      if (actionToPerform === 'favorite' && (translateValue.y > (SCREEN_HEIGHT*0.8)*-1)) {
+        this.autoSwipeToEnd('up');
+      } else if (actionToPerform === 'like' && translateValue.x < SCREEN_WIDTH) {
+        this.autoSwipeToEnd('right');
+      } else if (actionToPerform === 'dislike' && translateValue.x > SCREEN_WIDTH*-1) {
+        this.autoSwipeToEnd('left');
+      } else {
+        this.onSwipingStopped();
       }
-    ).start(() => this.onSwipingStopped('dislike'));
+    } else {
+      this.onSwipingStopped();
+    }
   }
 
-  autoSwipeRight() {
-    if (this.state.isSwiping) {
-      return false; // Prevent the button from working when the image is auto animating to prevent unexpected results.
-    }
+  autoSwipeToEnd(direction) {
+    this.setState({ isAutoSwiping: true, });
 
-    Animated.timing(
-      this.state.cardSliderTranslate.x,
-      {
-        toValue: (SCREEN_WIDTH),
-        duration: 600,
-      }
-    ).start(() => this.onSwipingStopped('like'));
-  }
-
-  autoSwipeUp() {
-    if (this.state.isSwiping) {
-      return false; // Prevent the button from working when the image is auto animating to prevent unexpected results.
-    }
-
-    Animated.timing(
-      this.state.cardSliderTranslate.y,
-      {
+    const values = {
+      up: {
+        axis: 'y',
         toValue: (SCREEN_HEIGHT*0.8)*-1,
         duration: 750,
-      }
-    ).start(() => this.onSwipingStopped('favorite'));
+      },
+      left: {
+        axis: 'x',
+        toValue: SCREEN_WIDTH*-1,
+        duration: 600,
+      },
+      right: {
+        axis: 'x',
+        toValue: SCREEN_WIDTH,
+        duration: 600,
+      },
+    };
+
+    const { axis, toValue, duration } = values[direction];
+
+    Animated.timing(
+      this.state.cardSliderTranslate[axis],
+      {
+        toValue,
+        duration,
+      },
+    ).start(() => this.onSwipingStopped());
+  }
+
+  onSwipeButtonPressed(direction) {
+    if (this.state.isSwiping) {
+      return false; // Prevent the button from working when the image is auto animating to prevent unexpected results.
+    }
+
+    this.autoSwipeToEnd(direction);
   }
 
   removeDisplayedPicture() {
@@ -215,7 +234,7 @@ export default class SwipingGallery extends Component {
           afterImageSrc={currentPicture.after}
           style={styles.card}
           touchListener={(dx, dy) => this.onSwiping(dx, dy)}
-          releaseListener={() => this.onSwipingStopped()}
+          releaseListener={() => this.onSwipeCardTouchRelease()}
           actionToPerform={actionToPerform}
           isSwiping={isSwiping}
         />
@@ -236,15 +255,15 @@ export default class SwipingGallery extends Component {
         </CardsContainer>
         <View>
           <PictureActionButtons>
-            <CustomButton style={styles.dislikeButton} activeStyle={styles.dislikeButtonActive} onClick={() => this.autoSwipeLeft()}>
+            <CustomButton style={styles.dislikeButton} activeStyle={styles.dislikeButtonActive} onClick={() => this.onSwipeButtonPressed('left')}>
               <Feather name="x" size={35} color="#c00" />
             </CustomButton>
 
-            <CustomButton onClick={() => this.autoSwipeUp()}>
+            <CustomButton onClick={() => this.onSwipeButtonPressed('up')}>
               <MaterialIcons name="star" size={20} color="#C4C4C4" />
             </CustomButton>
 
-            <CustomButton style={styles.likeButton} activeStyle={styles.likeButtonActive} onClick={() => this.autoSwipeRight()}>
+            <CustomButton style={styles.likeButton} activeStyle={styles.likeButtonActive} onClick={() => this.onSwipeButtonPressed('right')}>
               <Feather name="check" size={35} color="#27AE60" />
             </CustomButton>
           </PictureActionButtons>
