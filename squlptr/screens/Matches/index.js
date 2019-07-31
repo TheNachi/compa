@@ -10,11 +10,12 @@ import { DrawerActions } from 'react-navigation';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo';
 import Svg, { Path, Mask } from 'react-native-svg';
-import MatchListItem from './MatchListItem';
 import styled from 'styled-components/native';
 import Colors from '../../constants/Colors';
 import LogoTitle from '../../components/LogoTitle';
 import Button from '../../components/Button';
+import MatchListItem from './MatchListItem';
+import RequestConsultButtonArea from '../Matches/RequestConsultButtonArea';
 
 export default class Matches extends Component {
 
@@ -50,6 +51,30 @@ export default class Matches extends Component {
         company: 'Meta Plastic Surgery',
         imageSrc: 'https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
       },
+      {
+        id: 5,
+        name: 'Dr. Fari Wills',
+        company: 'Meta Plastic Surgery',
+        imageSrc: 'https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+      },
+      {
+        id: 6,
+        name: 'Dr. Fari Wills',
+        company: 'Meta Plastic Surgery',
+        imageSrc: 'https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+      },
+      {
+        id: 7,
+        name: 'Dr. Fari Wills',
+        company: 'Meta Plastic Surgery',
+        imageSrc: 'https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+      },
+      {
+        id: 8,
+        name: 'Dr. Fari Wills',
+        company: 'Meta Plastic Surgery',
+        imageSrc: 'https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80',
+      },
     ]
   };
 
@@ -59,10 +84,20 @@ export default class Matches extends Component {
     const { matches } = this.state;
 
     return (
-      <FlexContainerColumn>
+      <View
+        style={{
+          height: '100%',
+          width: '100%',
+          position: 'relative',
+        }}
+      >
 
         <ScrollView styles={styles.scrollView}>
-          <FlexContainerColumn>
+          <FlexContainerColumn
+            style={{
+              paddingBottom: 92,
+            }}
+          >
 
             <BestMatchImageWrapper>
               <BestMatchImage
@@ -70,6 +105,7 @@ export default class Matches extends Component {
                   uri:
                     'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60'
                 }}
+                aspectRatio={1}
               />
             </BestMatchImageWrapper>
 
@@ -165,13 +201,17 @@ export default class Matches extends Component {
             <FlexContainerColumn>
               {
                 matches.map((match, index) => (
-                  <MatchListItem
+                  <View
                     key={match.id}
-                    number={index+2}
-                    name={match.name}
-                    company={match.company}
-                    imageSrc={match.imageSrc}
-                  />
+                  >
+                    <MatchListItem
+                      number={index+2}
+                      name={match.name}
+                      company={match.company}
+                      imageSrc={match.imageSrc}
+                    />
+                    {matches.length - 1 > index && <MatchItemDivider />}
+                  </View>
                 ))
               }
             </FlexContainerColumn>
@@ -180,25 +220,9 @@ export default class Matches extends Component {
 
         </ScrollView>
 
-        <View
-          style={{
-            paddingLeft: 30,
-            paddingRight: 30,
-            paddingTop: 20,
-            paddingBottom: 20,
-          }}
-        >
-          <Button
-            title="Request Consult"
-            color={Colors.squlptr}
-            style={{
-              width: '100%',
-              marginTop: 0,
-            }}
-          />
-        </View>
+        <RequestConsultButtonArea />
 
-      </FlexContainerColumn>
+      </View>
     );
   }
 }
@@ -206,7 +230,7 @@ export default class Matches extends Component {
 const styles = StyleSheet.create({
   scrollView: {
     width: '100%',
-    flex: 1,
+    height: '100%',
   },
   bestMatchInfo: {
     paddingTop: 10,
@@ -245,7 +269,6 @@ const FlexContainerColumn = styled.View`
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
 `;
 
 const BestMatchImageWrapper = styled.View`
@@ -255,7 +278,12 @@ const BestMatchImageWrapper = styled.View`
 
 const BestMatchImage = styled.Image`
   width: 100%;
-  height: 100%;
   border-radius: 12px;
   background: #989898;
+`;
+
+const MatchItemDivider = styled.View`
+  height: 1px;
+  background-color: #f2f2f2;
+  margin: 0 25px;
 `;

@@ -4,8 +4,8 @@ import { Feather } from '@expo/vector-icons';
 import styled from 'styled-components/native';
 import Colors from '../../constants/Colors';
 import LogoTitle from '../../components/LogoTitle';
-import Button from '../../components/Button';
 import Section from './Section';
+import RequestConsultButtonArea from '../Matches/RequestConsultButtonArea';
 
 export default class AboutSurgeon extends Component {
 
@@ -49,17 +49,23 @@ export default class AboutSurgeon extends Component {
 
     return (
       <View
-        style={[
-          styles.container,
-          {
-            height: '100%',
-          }
-        ]}
+        style={{
+          height: '100%',
+          width: '100%',
+          position: 'relative',
+        }}
       >
         <ScrollView
           style={styles.scrollView}
         >
-          <View style={styles.container}>
+          <View
+            style={[
+              styles.container,
+              {
+                paddingBottom: 92,
+              }
+            ]}
+          >
 
             {/* Personal statement section */}
             <Section
@@ -118,23 +124,7 @@ export default class AboutSurgeon extends Component {
           </View>
         </ScrollView>
 
-        <View
-          style={{
-            paddingLeft: 25,
-            paddingRight: 25,
-            paddingTop: 20,
-            paddingBottom: 20,
-          }}
-        >
-          <Button
-            title="Request Consult"
-            color={Colors.squlptr}
-            style={{
-              width: '100%',
-              marginTop: 0,
-            }}
-          />
-        </View>
+        <RequestConsultButtonArea />
       </View>
     );
   }
@@ -164,7 +154,7 @@ const SectionTextWrapper = styled.View`
 const styles = StyleSheet.create({
   scrollView: {
     width: '100%',
-    flex: 1,
+    height: '100%',
   },
   container: {
     display: 'flex',

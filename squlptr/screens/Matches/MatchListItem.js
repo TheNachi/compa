@@ -18,13 +18,11 @@ export default ({ number, imageSrc, name, company }) => (
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingLeft: 30,
-    paddingRight: 30,
+    paddingLeft: 25,
+    paddingRight: 25,
   },
   inner: {
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
