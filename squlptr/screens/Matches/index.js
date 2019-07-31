@@ -54,6 +54,8 @@ export default class Matches extends Component {
   };
 
   render() {
+    const { navigation } = this.props;
+
     const { matches } = this.state;
 
     return (
@@ -122,6 +124,7 @@ export default class Matches extends Component {
                   borderRightWidth: 2,
                   borderRightColor: '#f2f2f2',
                 }}
+                onPress={() => navigation.navigate('AboutSurgeonScreen')}
               >
                 <Svg width="18" height="18" viewBox="0 0 18 18" fill="none">
                   <Path d="M13.0382 5.23155C13.0382 7.47742 11.2163 9.29928 8.97044 9.29928C6.72604 9.29928 4.90271 7.46416 4.90271 5.23155C4.90271 3.00195 6.72307 1.17859 8.97044 1.17859C11.2193 1.17859 13.0382 2.98869 13.0382 5.23155Z" stroke="#344148" stroke-width="1.5"/>
@@ -183,8 +186,6 @@ export default class Matches extends Component {
             paddingRight: 30,
             paddingTop: 20,
             paddingBottom: 20,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
           }}
         >
           <Button

@@ -24,6 +24,7 @@ import ConfirmCode from '../screens/Auth/Phone/ConfirmCode';
 import BuildProfile from '../screens/BuildProfile';
 import Home from '../screens/Home';
 import Appointments from '../screens/Appointments';
+import AboutSurgeon from '../screens/AboutSurgeon';
 import Matches from '../screens/Matches';
 import Colors from '../constants/Colors';
 import Button from '../components/Button';
@@ -105,6 +106,7 @@ const AuthNavigator = createStackNavigator(
 const MatchesNavigator = createStackNavigator(
   {
     MatchesScreen: Matches,
+    AboutSurgeonScreen: AboutSurgeon,
   }
 );
 
