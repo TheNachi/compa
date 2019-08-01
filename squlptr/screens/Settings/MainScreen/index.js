@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { DrawerActions } from 'react-navigation';
 import { Feather } from '@expo/vector-icons';
-import styled from 'styled-components/native';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -70,7 +69,12 @@ export default class MainScreen extends Component {
 
           <SettingsHeader text="Settings" />
 
-          <Section header="DISCOVERY">
+          <Section
+            header="DISCOVERY"
+            style={{
+              marginTop: 20,
+            }}
+          >
 
             <SettingListItem
               style={{

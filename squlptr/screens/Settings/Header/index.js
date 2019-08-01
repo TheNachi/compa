@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingLeft: 25,
     paddingTop: 20,
-    paddingBottom: 20,
   },
   headerText: {
     color: '#344148',

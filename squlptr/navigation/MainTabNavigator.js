@@ -16,7 +16,7 @@ import Colors from '../constants/Colors';
 import Profile from '../screens/Profile';
 import Favourite from '../screens/Favourite';
 import SwipeGallery from '../screens/SwipeGallery';
-import Matches from '../screens/Matches';
+import Help from '../screens/Help';
 import {
   Feather,
   MaterialIcons,
@@ -105,7 +105,7 @@ ChatStack.navigationOptions = {
 };
 
 export const HelpStack = createStackNavigator({
-  Profile: Profile
+  HelpScreen: Help
 });
 
 HelpStack.navigationOptions = {
