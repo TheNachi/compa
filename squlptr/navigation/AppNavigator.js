@@ -25,6 +25,8 @@ import BuildProfile from '../screens/BuildProfile';
 import Home from '../screens/Home';
 import Appointments from '../screens/Appointments';
 import AboutSurgeon from '../screens/AboutSurgeon';
+import SettingsHome from '../screens/Settings/MainScreen';
+import SurgeonsLocation from '../screens/Settings/SurgeonsLocation';
 import Matches from '../screens/Matches';
 import Colors from '../constants/Colors';
 import Button from '../components/Button';
@@ -110,6 +112,13 @@ const MatchesNavigator = createStackNavigator(
   }
 );
 
+const SettingsStack = createStackNavigator(
+  {
+    SettingsHomeScreen: SettingsHome,
+    SurgeonsLocationScreen: SurgeonsLocation,
+  }
+);
+
 // const AppNavigator = createDrawerNavigator({
 //   AppointmentsScreen: Appointments,
 //   HomeScreen: Home
@@ -122,7 +131,7 @@ const AppDrawerNavigator = createDrawerNavigator(
     Appointments: AppointmentStack,
     Chat: ChatStack,
     Help: HelpStack,
-    Settings: ProfileStack,
+    Settings: SettingsStack,
   },
   {
     hideStatusBar: true,
