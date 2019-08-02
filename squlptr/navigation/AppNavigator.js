@@ -26,6 +26,7 @@ import Home from '../screens/Home';
 import Appointments from '../screens/Appointments';
 import Colors from '../constants/Colors';
 import Button from '../components/Button';
+import AuthLoadingScreen from '../screens/Auth/AuthLoading';
 
 const ProfileImage = styled.TouchableOpacity`
   height: 60;
@@ -95,19 +96,21 @@ const AuthNavigator = createStackNavigator(
   {
     RegisterScreen: Register,
     PhoneNumberScreen: PhoneNumber,
-    ConfirmCodeScreen: ConfirmCode,
-    BuildProfileScreen: BuildProfile
+    ConfirmCodeScreen: ConfirmCode
   }
-  // { initialRouteName: 'ConfirmCodeScreen' }
+  // { initialRouteName: 'BuildProfileScreen' }
 );
 
-// const AppNavigator = createDrawerNavigator({
-//   AppointmentsScreen: Appointments,
-//   HomeScreen: Home
-// });
+const BuildProfileNavigator = createStackNavigator(
+  {
+    BuildProfileScreen: BuildProfile
+  }
+  // { initialRouteName: 'BuildProfileScreen' }
+);
+
 const AppDrawerNavigator = createDrawerNavigator(
   {
-    Home: { screen: MainTabNavigator },
+    Home: MainTabNavigator,
     // 'My Photos': PhotoStack,
     Favourites: FavoriteStack,
     Appointments: AppointmentStack,
@@ -130,12 +133,17 @@ export default createAppContainer(
   createSwitchNavigator(
     {
       // Drawer: MyDrawerNavigator,
+      AuthLoading: AuthLoadingScreen,
       Auth: AuthNavigator,
+      BuildProfileScreen: BuildProfileNavigator,
       // App: AppNavigator,
       // You could add another route here for authentication.
       // Read more at https://reactnavigation.org/docs/en/auth-flow.html
       Main: AppDrawerNavigator
     },
-    { initialRouteName: 'Main', hideTabBar: false }
+    {
+      initialRouteName: 'AuthLoading'
+    }
+    // { initialRouteName: 'Main', hideTabBar: false }
   )
 );
