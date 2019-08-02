@@ -92,21 +92,15 @@ const CustomDrawer = props => (
   </SafeAreaView>
 );
 
-const AuthNavigator = createStackNavigator(
-  {
-    RegisterScreen: Register,
-    PhoneNumberScreen: PhoneNumber,
-    ConfirmCodeScreen: ConfirmCode
-  }
-  // { initialRouteName: 'BuildProfileScreen' }
-);
+const AuthNavigator = createStackNavigator({
+  RegisterScreen: Register,
+  PhoneNumberScreen: PhoneNumber,
+  ConfirmCodeScreen: ConfirmCode
+});
 
-const BuildProfileNavigator = createStackNavigator(
-  {
-    BuildProfileScreen: BuildProfile
-  }
-  // { initialRouteName: 'BuildProfileScreen' }
-);
+const BuildProfileNavigator = createStackNavigator({
+  BuildProfileScreen: BuildProfile
+});
 
 const AppDrawerNavigator = createDrawerNavigator(
   {
@@ -144,6 +138,5 @@ export default createAppContainer(
     {
       initialRouteName: 'AuthLoading'
     }
-    // { initialRouteName: 'Main', hideTabBar: false }
   )
 );
