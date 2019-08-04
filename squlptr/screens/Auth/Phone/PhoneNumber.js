@@ -4,6 +4,8 @@ import { Alert, View } from 'react-native';
 import styled from 'styled-components/native';
 import Button from '../../../components/Button';
 import Colors from '../../../constants/Colors';
+import axios from 'axios';
+import { encode as btoa } from 'base-64';
 
 const HeaderText = styled.Text`
   color: #344148;
@@ -22,14 +24,48 @@ const BodyText = styled.Text`
   width: 76%;
   align-self: center;
 `;
+const accountSid = 'ACb5aa1033cd1e3876061a6d8cc44b0a38';
+const authToken = '0f4632b18a96d45ccf48260c4818a2cd';
+let encoded = btoa(`${accountSid}:${authToken}`);
+let TwilioInstance = axios.create({
+  baseURL: 'https://verify.twilio.com/v2',
+  headers: { Authorization: `Basic ${encoded}` }
+});
 class PhoneNumber extends React.Component {
-  state = { code: '', phone: '' };
+  state = { code: '', phone: '', loading: false };
+
+  handleValidatePhone = phone => {
+    this.setState({ loading: true });
+    console.log('inside validate phone phone is ', phone);
+    var form = new FormData();
+    form.append('To', phone);
+    form.append('Channel', 'sms');
+    TwilioInstance.post(
+      '/Services/VAcb3d37dc42ac4495d4886fba0cfb851d/Verifications',
+      form
+    )
+      .then(response => {
+        console.log('response is ', response);
+        this.setState({ loading: false });
+        this.props.navigation.navigate('ConfirmCodeScreen', {
+          phone: phone
+        });
+      })
+      .catch(err => {
+        console.log({ err: err.response.data.message });
+        this.setState({ loading: false });
+      });
+
+    // this.props.navigation.navigate('ConfirmCodeScreen', {
+    //   phone: phone
+    // });
+  };
 
   handlePhoneNumber = () => {
     let { code, phone } = this.state;
     Alert.alert(
       'Confirmation',
-      `We will send a verification code to the following number ${code}${phone}`,
+      `We will send a verification code to the following number +${code}${phone}`,
       [
         {
           text: "Don't Allow",
@@ -38,7 +74,8 @@ class PhoneNumber extends React.Component {
         },
         {
           text: 'Allow',
-          onPress: () => this.props.navigation.navigate('ConfirmCodeScreen')
+          // onPress: () => this.props.navigation.navigate('ConfirmCodeScreen')
+          onPress: () => this.handleValidatePhone(`+${code}${phone}`)
         }
       ],
       { cancelable: false }
@@ -47,6 +84,9 @@ class PhoneNumber extends React.Component {
 
   render() {
     let { navigate } = this.props.navigation;
+    let { loading, code, phone } = this.state;
+    let isButtonEnabled = !!code && !!phone;
+    console.log({ isButtonEnabled });
 
     return (
       <View style={{ flex: 1, alignItems: 'center', marginTop: 40 }}>
@@ -58,8 +98,9 @@ class PhoneNumber extends React.Component {
         <TextInputWrap>
           <TextInputBox
             onChangeText={code => this.setState({ code })}
+            keyboardType="phone-pad"
             value={this.state.code}
-            maxLength={4}
+            maxLength={3}
             style={{
               flex: 0.16,
               marginRight: 10,
@@ -68,7 +109,7 @@ class PhoneNumber extends React.Component {
             }}
           />
           <TextInputBox
-            onChangeText={phone => this.setState({ phone })}
+            onChangeText={phone => this.setState({ phone: phone.trim() })}
             clearButtonMode="always"
             value={this.state.phone}
             style={{ flex: 1 }}
@@ -76,9 +117,11 @@ class PhoneNumber extends React.Component {
           />
         </TextInputWrap>
         <Button
+          disabled={!isButtonEnabled}
           title="Continue"
           color={Colors.squlptr}
           onPress={this.handlePhoneNumber}
+          isLoading={loading}
         />
       </View>
     );

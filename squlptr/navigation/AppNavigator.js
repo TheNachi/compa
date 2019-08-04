@@ -15,8 +15,8 @@ import MainTabNavigator, {
   FavoriteStack,
   ChatStack,
   HelpStack,
-  ProfileStack,
-  PhotoStack
+  ProfileStack
+  // PhotoStack
 } from './MainTabNavigator';
 import Register from '../screens/Login';
 import PhoneNumber from '../screens/Auth/Phone/PhoneNumber';
@@ -26,6 +26,7 @@ import Home from '../screens/Home';
 import Appointments from '../screens/Appointments';
 import Colors from '../constants/Colors';
 import Button from '../components/Button';
+import AuthLoadingScreen from '../screens/Auth/AuthLoading';
 
 const ProfileImage = styled.TouchableOpacity`
   height: 60;
@@ -91,24 +92,20 @@ const CustomDrawer = props => (
   </SafeAreaView>
 );
 
-const AuthNavigator = createStackNavigator(
-  {
-    RegisterScreen: Register,
-    PhoneNumberScreen: PhoneNumber,
-    ConfirmCodeScreen: ConfirmCode,
-    BuildProfileScreen: BuildProfile
-  }
-  // { initialRouteName: 'ConfirmCodeScreen' }
-);
+const AuthNavigator = createStackNavigator({
+  RegisterScreen: Register,
+  PhoneNumberScreen: PhoneNumber,
+  ConfirmCodeScreen: ConfirmCode
+});
 
-// const AppNavigator = createDrawerNavigator({
-//   AppointmentsScreen: Appointments,
-//   HomeScreen: Home
-// });
+const BuildProfileNavigator = createStackNavigator({
+  BuildProfileScreen: BuildProfile
+});
+
 const AppDrawerNavigator = createDrawerNavigator(
   {
-    Home: { screen: MainTabNavigator },
-    'My Photos': PhotoStack,
+    Home: MainTabNavigator,
+    // 'My Photos': PhotoStack,
     Favourites: FavoriteStack,
     Appointments: AppointmentStack,
     Chat: ChatStack,
@@ -118,7 +115,8 @@ const AppDrawerNavigator = createDrawerNavigator(
   {
     hideStatusBar: true,
     drawerBackgroundColor: 'transparent',
-    contentComponent: CustomDrawer
+    contentComponent: CustomDrawer,
+    hideTabBar: false
     // contentOptions: { itemsContainerStyle: { backgroundColor: 'red' } }
   }
 );
@@ -129,12 +127,16 @@ export default createAppContainer(
   createSwitchNavigator(
     {
       // Drawer: MyDrawerNavigator,
+      AuthLoading: AuthLoadingScreen,
       Auth: AuthNavigator,
+      BuildProfileScreen: BuildProfileNavigator,
       // App: AppNavigator,
       // You could add another route here for authentication.
       // Read more at https://reactnavigation.org/docs/en/auth-flow.html
       Main: AppDrawerNavigator
     },
-    { initialRouteName: 'Main' }
+    {
+      initialRouteName: 'AuthLoading'
+    }
   )
 );
