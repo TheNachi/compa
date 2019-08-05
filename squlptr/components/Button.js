@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
+import { Alert, View, ActivityIndicator } from 'react-native';
 
 const ButtonStyle = styled.TouchableOpacity`
   height: 52px;
@@ -13,6 +14,7 @@ const ButtonStyle = styled.TouchableOpacity`
   border-radius: 12px;
   text-align: center;
   background-color: ${props => (props.color ? props.color : 'red')};
+  ${props => props.disabled && `background-color: rgba(0,0,0,0.2);`}
 `;
 
 const ButtonWrap = styled.View`
@@ -28,9 +30,23 @@ const ButtonText = styled.Text`
   font-size: 16px;
 `;
 
-const Button = ({ title, color, icon, wrapStyle, style, onPress }) => {
+const Button = ({
+  title,
+  color,
+  icon,
+  wrapStyle,
+  style,
+  onPress,
+  isLoading,
+  disabled
+}) => {
   return (
-    <ButtonStyle style={style} onPress={onPress} color={color}>
+    <ButtonStyle
+      disabled={disabled}
+      style={style}
+      onPress={onPress}
+      color={color}
+    >
       <ButtonWrap style={wrapStyle}>
         {icon && (
           <MaterialCommunityIcons
@@ -40,7 +56,11 @@ const Button = ({ title, color, icon, wrapStyle, style, onPress }) => {
             color={Colors.white}
           />
         )}
-        <ButtonText>{title}</ButtonText>
+        {isLoading ? (
+          <ActivityIndicator color={Colors.white} />
+        ) : (
+          <ButtonText>{title}</ButtonText>
+        )}
       </ButtonWrap>
     </ButtonStyle>
   );

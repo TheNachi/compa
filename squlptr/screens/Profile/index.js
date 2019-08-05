@@ -396,7 +396,7 @@ const InfoItemValueBox = styled.View`
 
 const TextInputBox = styled.TextInput`
   border-radius: 12px;
-  background-color: #d9d9d9;
+  background-color: #f1f1f1;
   height: 42px;
   padding: 0 10px;
   flex: 1;
