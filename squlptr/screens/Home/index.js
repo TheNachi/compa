@@ -10,8 +10,16 @@ import LogoTitle from '../../components/LogoTitle';
 import Pill from '../../components/Pill';
 import DocCard from '../../components/DocCard';
 import { DrawerActions } from 'react-navigation';
+import { Video } from 'expo-av';
 
-export default class Home extends React.Component {
+class Home extends React.Component {
+  state = {
+    firstname: 'Carey',
+    lastname: 'Right',
+    avatar:
+      'https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
+    username: 'careyright'
+  };
   static navigationOptions = ({ navigation, screenProps }) => ({
     headerTitle: <LogoTitle />,
     headerRight: (
@@ -34,12 +42,32 @@ export default class Home extends React.Component {
     },
     headerTintColor: '#fff'
   });
+
+  componentDidMount = () => {
+    let avatar = this.props.navigation.getParam('avatar');
+    let firstname = this.props.navigation.getParam('firstname');
+    let lastname = this.props.navigation.getParam('lastname');
+    let username = this.props.navigation.getParam('username');
+    this.setState({
+      avatar,
+      firstname,
+      lastname,
+      username
+    });
+  };
+
   render() {
+    let { firstname, lastname, avatar, username } = this.state;
     return (
       <SafeAreaView>
         <ScrollView ref="_scrollView" contentContainerStyle={styles.container}>
           <StatusBar barStyle="light-content" />
-          <ImgBackground src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60" />
+          <ImgBackground
+            src={avatar}
+            firstname={firstname}
+            lastname={lastname}
+            username={username}
+          />
           <SkillView>
             <Pill title="Breast Augmentation" />
             <Pill title="Lip Filler" background="rgba(194, 251, 255, 0.82)" />
@@ -56,15 +84,25 @@ export default class Home extends React.Component {
               style={styles.docCard}
             >
               <>
-                <DocImageWrap>
-                  <Image
-                    style={{ width: '100%', height: '100%' }}
-                    source={{
-                      uri:
-                        'https://images.unsplash.com/photo-1561196470-073aadc339e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'
-                    }}
-                  />
-                </DocImageWrap>
+                <Video
+                  source={{
+                    uri:
+                      'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
+                  }}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode="cover"
+                  useNativeControls={true}
+                  // shouldPlay
+                  isLooping
+                  style={{
+                    width: '100%',
+                    height: 200,
+                    borderRadius: 12,
+                    marginBottom: 10
+                  }}
+                />
                 <DocTextSecondary>{`1092 views`}</DocTextSecondary>
               </>
             </DocCard>
@@ -77,15 +115,25 @@ export default class Home extends React.Component {
               style={styles.docCard}
             >
               <>
-                <DocImageWrap>
-                  <Image
-                    style={{ width: '100%', height: '100%' }}
-                    source={{
-                      uri:
-                        'https://images.unsplash.com/photo-1561221821-24cd451ef705?ixlib=rb-1.2.1&auto=format&fit=crop&w=975&q=80'
-                    }}
-                  />
-                </DocImageWrap>
+                <Video
+                  source={{
+                    uri:
+                      'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
+                  }}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode="cover"
+                  useNativeControls={true}
+                  // shouldPlay
+                  isLooping
+                  style={{
+                    width: '100%',
+                    height: 200,
+                    borderRadius: 12,
+                    marginBottom: 10
+                  }}
+                />
                 <DocTextSecondary>{`1092 views`}</DocTextSecondary>
               </>
             </DocCard>
@@ -97,15 +145,25 @@ export default class Home extends React.Component {
               style={styles.docCard}
             >
               <>
-                <DocImageWrap>
-                  <Image
-                    style={{ width: '100%', height: '100%' }}
-                    source={{
-                      uri:
-                        'https://images.unsplash.com/photo-1557851831-1e9738c47f1c?ixlib=rb-1.2.1&auto=format&fit=crop&w=975&q=80'
-                    }}
-                  />
-                </DocImageWrap>
+                <Video
+                  source={{
+                    uri:
+                      'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
+                  }}
+                  rate={1.0}
+                  volume={1.0}
+                  isMuted={false}
+                  resizeMode="cover"
+                  useNativeControls={true}
+                  // shouldPlay
+                  isLooping
+                  style={{
+                    width: '100%',
+                    height: 200,
+                    borderRadius: 12,
+                    marginBottom: 10
+                  }}
+                />
                 <DocTextSecondary>{`8000 views`}</DocTextSecondary>
               </>
             </DocCard>
@@ -158,7 +216,7 @@ const SkillView = styled.View`
   justify-content: space-between;
 `;
 
-const ImgBackground = ({ src }) => (
+const ImgBackground = ({ src, firstname, lastname, username }) => (
   <View style={{ height: 300 }}>
     <ImgBg source={{ uri: src }} resizeMethod="auto" resizeMode="cover">
       <LinearGradient
@@ -170,8 +228,8 @@ const ImgBackground = ({ src }) => (
         ]}
         style={styles.gradientStyle}
       >
-        <ImgTextPrimary>Carery Right</ImgTextPrimary>
-        <ImgTextSecondary>@careyright</ImgTextSecondary>
+        <ImgTextPrimary>{`${firstname} ${lastname}`}</ImgTextPrimary>
+        <ImgTextSecondary>{`@${username}`}</ImgTextSecondary>
       </LinearGradient>
     </ImgBg>
   </View>
@@ -218,3 +276,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0
   }
 });
+
+export default Home;
