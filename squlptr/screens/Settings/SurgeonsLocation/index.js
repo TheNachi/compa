@@ -83,7 +83,9 @@ export default class SurgeonsLocation extends Component {
 
           <SettingsHeader text="Show Surgeons" />
 
-          <Section>
+          <Section
+            style={{ marginTop: 20, }}
+          >
 
             <SettingListItemTouchable
               style={[
