@@ -32,7 +32,7 @@ let TwilioInstance = axios.create({
   headers: { Authorization: `Basic ${encoded}` }
 });
 class PhoneNumber extends React.Component {
-  state = { code: '', phone: '', loading: false };
+  state = { code: '+1', phone: '', codeError: '', loading: false };
 
   handleValidatePhone = phone => {
     this.setState({ loading: true });
@@ -61,11 +61,33 @@ class PhoneNumber extends React.Component {
     // });
   };
 
+  validateMobileNumber() {
+    const { code } = this.state;
+    
+    let error;
+    if (!/^\+[0-9]+$/.test(code.toString())) {
+      error = 'Invalid country code';
+    } 
+
+    if (error) {
+      this.setState({ codeError: error });
+      return false;
+    }
+
+    this.setState({ codeError: '' });
+    return true;
+  }
+
   handlePhoneNumber = () => {
     let { code, phone } = this.state;
+
+    if (!this.validateMobileNumber()) {
+      return;
+    }
+
     Alert.alert(
       'Confirmation',
-      `We will send a verification code to the following number +${code}${phone}`,
+      `We will send a verification code to the following number ${code}${phone}`,
       [
         {
           text: "Don't Allow",
@@ -75,7 +97,7 @@ class PhoneNumber extends React.Component {
         {
           text: 'Allow',
           // onPress: () => this.props.navigation.navigate('ConfirmCodeScreen')
-          onPress: () => this.handleValidatePhone(`+${code}${phone}`)
+          onPress: () => this.handleValidatePhone(`${code}${phone}`)
         }
       ],
       { cancelable: false }
@@ -84,25 +106,24 @@ class PhoneNumber extends React.Component {
 
   render() {
     let { navigate } = this.props.navigation;
-    let { loading, code, phone } = this.state;
-    let isButtonEnabled = !!code && !!phone;
+    let { loading, code, phone, codeError } = this.state;
+    let isButtonEnabled = !!code && !!phone && !codeError;
     console.log({ isButtonEnabled });
 
     return (
       <View style={{ flex: 1, alignItems: 'center', marginTop: 40 }}>
-        <HeaderText>What's your phone numeber?</HeaderText>
+        <HeaderText>What's your phone number?</HeaderText>
         <BodyText>
-          Whether you are a new or returning member, let’s start with your phone
-          number.
+          Whether you are a new or returning member, let’s start with your phone number.
         </BodyText>
         <TextInputWrap>
           <TextInputBox
-            onChangeText={code => this.setState({ code })}
+            onChangeText={code => this.setState({ code }, () => this.validateMobileNumber())}
             keyboardType="phone-pad"
             value={this.state.code}
-            maxLength={3}
+            maxLength={4}
             style={{
-              flex: 0.16,
+              flex: 0.18,
               marginRight: 10,
               justifyContent: 'center',
               alignItems: 'center'
@@ -116,6 +137,9 @@ class PhoneNumber extends React.Component {
             keyboardType="phone-pad"
           />
         </TextInputWrap>
+        
+        <ErrorText>{codeError}</ErrorText>
+
         <Button
           disabled={!isButtonEnabled}
           title="Continue"
@@ -143,6 +167,11 @@ const TextInputBox = styled.TextInput`
   background-color: #f1f1f1;
   padding: 10px;
   padding-left: 15px;
+`;
+
+const ErrorText = styled.Text`
+  font-size: 13px;
+  color: #cc0000;
 `;
 
 export default PhoneNumber;

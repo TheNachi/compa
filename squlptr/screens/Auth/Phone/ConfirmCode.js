@@ -47,6 +47,8 @@ class ConfirmCode extends React.Component {
     phone: ''
   };
 
+  inputRefs = {};
+
   async storeToken(accessToken) {
     try {
       await AsyncStorage.setItem(ACCESS_TOKEN, accessToken);
@@ -90,6 +92,31 @@ class ConfirmCode extends React.Component {
     this.setState({ phone });
   }
 
+  onEnterNumber(codeNumber, code) {
+    let fieldFocus;
+    if (code) { // If a value was inserted into the current field.
+      fieldFocus = this.inputRefs[`code${codeNumber + 1}`];
+    }
+
+    if (fieldFocus) {
+      fieldFocus.focus();
+    }
+    
+    this.setState({
+      [`code${codeNumber}`]: code,
+    });
+  }
+
+  onKeyPress({ nativeEvent }, codeNumber) {
+    const prevKey = `code${codeNumber - 1}`;
+    const prevInput = this.inputRefs[prevKey];
+
+    if (!this.state[`code${codeNumber}`] && nativeEvent.key === 'Backspace' && prevInput) {
+      this.setState({ [prevKey]: '', });
+      prevInput.focus();
+    }
+  }
+
   render() {
     let { navigate } = this.props.navigation;
     let {
@@ -104,7 +131,6 @@ class ConfirmCode extends React.Component {
     } = this.state;
     let isButtonEnabled =
       !!code1 && !!code2 && !!code3 && !!code4 && !!code5 && !!code6;
-    // console.log(this.state);
 
     return (
       <View style={{ flex: 1, alignItems: 'center', marginTop: 40 }}>
@@ -114,8 +140,10 @@ class ConfirmCode extends React.Component {
         </BodyText>
         <TextInputWrap>
           <TextInputBox
-            onChangeText={code1 => this.setState({ code1 })}
-            value={this.state.code}
+            ref={ref => this.inputRefs.code1 = ref}
+            onChangeText={code1 => this.onEnterNumber(1, code1)}
+            onKeyPress={event => this.onKeyPress(event, 1)}
+            value={this.state.code1}
             keyboardType="numeric"
             maxLength={1}
             style={{
@@ -126,21 +154,10 @@ class ConfirmCode extends React.Component {
           />
           <Icon name="dash" style={{ color: '#C4C4C4' }} />
           <TextInputBox
-            onChangeText={code2 => this.setState({ code2 })}
-            value={this.state.code}
-            keyboardType="numeric"
-            maxLength={1}
-            style={{
-              flex: 1,
-              marginRight: 10,
-              marginLeft: 10,
-              textAlign: 'center'
-            }}
-          />
-          <Icon name="dash" style={{ color: '#C4C4C4' }} />
-          <TextInputBox
-            onChangeText={code3 => this.setState({ code3 })}
-            value={this.state.code}
+            ref={ref => this.inputRefs.code2 = ref}
+            onChangeText={code2 => this.onEnterNumber(2, code2)}
+            onKeyPress={event => this.onKeyPress(event, 2)}
+            value={this.state.code2}
             keyboardType="numeric"
             maxLength={1}
             style={{
@@ -152,8 +169,25 @@ class ConfirmCode extends React.Component {
           />
           <Icon name="dash" style={{ color: '#C4C4C4' }} />
           <TextInputBox
-            onChangeText={code4 => this.setState({ code4 })}
-            value={this.state.code}
+            ref={ref => this.inputRefs.code3 = ref}
+            onChangeText={code3 => this.onEnterNumber(3, code3)}
+            onKeyPress={event => this.onKeyPress(event, 3)}
+            value={this.state.code3}
+            keyboardType="numeric"
+            maxLength={1}
+            style={{
+              flex: 1,
+              marginRight: 10,
+              marginLeft: 10,
+              textAlign: 'center'
+            }}
+          />
+          <Icon name="dash" style={{ color: '#C4C4C4' }} />
+          <TextInputBox
+            ref={ref => this.inputRefs.code4 = ref}
+            onChangeText={code4 => this.onEnterNumber(4, code4)}
+            onKeyPress={event => this.onKeyPress(event, 4)}
+            value={this.state.code4}
             keyboardType="numeric"
             maxLength={1}
             style={{
@@ -164,8 +198,10 @@ class ConfirmCode extends React.Component {
           />
           <Icon name="dash" style={{ color: '#C4C4C4' }} />
           <TextInputBox
-            onChangeText={code5 => this.setState({ code5 })}
-            value={this.state.code}
+            ref={ref => this.inputRefs.code5 = ref}
+            onChangeText={code5 => this.onEnterNumber(5, code5)}
+            onKeyPress={event => this.onKeyPress(event, 5)}
+            value={this.state.code5}
             keyboardType="numeric"
             maxLength={1}
             style={{
@@ -176,8 +212,10 @@ class ConfirmCode extends React.Component {
           />
           <Icon name="dash" style={{ color: '#C4C4C4' }} />
           <TextInputBox
-            onChangeText={code6 => this.setState({ code6 })}
-            value={this.state.code}
+            ref={ref => this.inputRefs.code6 = ref}
+            onChangeText={code6 => this.onEnterNumber(6, code6)}
+            onKeyPress={event => this.onKeyPress(event, 6)}
+            value={this.state.code6}
             keyboardType="numeric"
             maxLength={1}
             style={{
