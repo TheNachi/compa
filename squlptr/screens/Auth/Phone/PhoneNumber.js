@@ -3,6 +3,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { Alert, View } from 'react-native';
 import styled from 'styled-components/native';
 import Button from '../../../components/Button';
+import CountryCodeSelector from '../CountryCodeSelector';
 import Colors from '../../../constants/Colors';
 import axios from 'axios';
 import { encode as btoa } from 'base-64';
@@ -52,8 +53,13 @@ class PhoneNumber extends React.Component {
         });
       })
       .catch(err => {
-        console.log({ err: err.response.data.message });
+        console.log({ err: err.response.data });
         this.setState({ loading: false });
+
+        Alert.alert(
+          'Error',
+          'Unable to send SMS. You can try again later or try using a different number',
+        )
       });
 
     // this.props.navigation.navigate('ConfirmCodeScreen', {
@@ -61,29 +67,8 @@ class PhoneNumber extends React.Component {
     // });
   };
 
-  validateMobileNumber() {
-    const { code } = this.state;
-    
-    let error;
-    if (!/^\+[0-9]+$/.test(code.toString())) {
-      error = 'Invalid country code';
-    } 
-
-    if (error) {
-      this.setState({ codeError: error });
-      return false;
-    }
-
-    this.setState({ codeError: '' });
-    return true;
-  }
-
   handlePhoneNumber = () => {
     let { code, phone } = this.state;
-
-    if (!this.validateMobileNumber()) {
-      return;
-    }
 
     Alert.alert(
       'Confirmation',
@@ -104,10 +89,27 @@ class PhoneNumber extends React.Component {
     );
   };
 
+  onCountryCodeSelected(code) {console.log(code);
+    this.setState({ code });
+
+    this.phoneNumberField.focus();
+  }
+
+  onPhoneNumberChanged(phone) {
+    phone = phone.trim();
+
+    let phoneError = '';
+    if (!phone) {
+      phoneError = 'Your phone number is required';
+    }
+
+    this.setState({ phone, phoneError });
+  }
+
   render() {
     let { navigate } = this.props.navigation;
-    let { loading, code, phone, codeError } = this.state;
-    let isButtonEnabled = !!code && !!phone && !codeError;
+    let { loading, code, phone, phoneError } = this.state;
+    let isButtonEnabled = !!code && !!phone && !phoneError;
     console.log({ isButtonEnabled });
 
     return (
@@ -117,28 +119,23 @@ class PhoneNumber extends React.Component {
           Whether you are a new or returning member, let’s start with your phone number.
         </BodyText>
         <TextInputWrap>
-          <TextInputBox
-            onChangeText={code => this.setState({ code }, () => this.validateMobileNumber())}
-            keyboardType="phone-pad"
-            value={this.state.code}
-            maxLength={4}
-            style={{
-              flex: 0.18,
-              marginRight: 10,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
+          <CountryCodeSelector
+            defaultCode="US"
+            onSelected={(code) => this.onCountryCodeSelected(code)}
           />
+
           <TextInputBox
-            onChangeText={phone => this.setState({ phone: phone.trim() })}
+            ref={ref => this.phoneNumberField = ref}
+            onChangeText={phone => this.onPhoneNumberChanged(phone)}
             clearButtonMode="always"
             value={this.state.phone}
-            style={{ flex: 1 }}
+            style={{ flex: 1, marginLeft: 5, }}
             keyboardType="phone-pad"
+            keyboardType="numeric"
           />
         </TextInputWrap>
         
-        <ErrorText>{codeError}</ErrorText>
+        <ErrorText>{phoneError}</ErrorText>
 
         <Button
           disabled={!isButtonEnabled}
