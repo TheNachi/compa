@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Alert,
   View,
-  TouchableOpacity,
+  Text,
   ScrollView,
   KeyboardAvoidingView,
   AsyncStorage,
@@ -17,6 +17,7 @@ import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import Colors from '../../constants/Colors';
 import Button from '../../components/Button';
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 const RoundedImage = ({ src }) => (
   <View
@@ -101,28 +102,37 @@ class BuildProfile extends React.Component {
 
   state = {
     avatar: null,
-    lastname: '',
     firstname: '',
+    lastname: '',
     password: '',
     email: '',
     phone: '',
     username: '',
     dob: '',
+    avatarError: '',
+    firstnameError: '',
+    lastError: '',
+    usernameError: '',
+    emailError: '',
+    birthDatePickerVisible: false,
     loading: false
   };
-
-  componentDidMount() {
-    this.getPermissionAsync();
-  }
 
   getPermissionAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
     if (status !== 'granted') {
       alert('Sorry, we need camera roll permissions to make this work!');
+      return false;
     }
+
+    return true;
   };
 
   _pickImage = async () => {
+    if (!this.getPermissionAsync()) {
+      return;
+    }
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -132,7 +142,9 @@ class BuildProfile extends React.Component {
     console.log('image result is ', result);
 
     if (!result.cancelled) {
-      this.setState({ avatar: result.uri });
+      this.setState({ avatar: result.uri, avatarError: '' });
+    } else if (!this.state.avatar) { // If select was cancelled and no avatar was selected.
+      this.setState({ avatarError: 'Your profile picture is required', });
     }
   };
 
@@ -185,10 +197,82 @@ class BuildProfile extends React.Component {
       })
       .catch(err => {
         // console.log({ err: err.response.data.message });
-        console.log({ err });
+        console.log(err.response);
         this.setState({ loading: false });
       });
   };
+
+  setName(key, value) {
+    value = value.trim();
+
+    let error = '';
+    if (!value) {
+      error = `${key} is required`;
+    }
+
+    this.setState({
+      [key]: value,
+      [`${key}Error`]: error,
+    });
+  }
+
+  setEmail(value) {
+    value = value.trim().toLowerCase();
+
+    let error = '';
+    if (!value) {
+      error = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(value)) {
+      error = 'Email is not valid';
+    }
+
+    this.setState({ email: value, emailError: error });
+  }
+
+  setPassword(password) {
+    password = password.trim();
+
+    let error = '';
+    if (!password) {
+      error = 'Your password is required';
+    } else if (password.length < 6) {
+      error = 'Password should be at least 6 characters';
+    }
+
+    this.setState({ password, passwordError: error });
+  }
+  
+  setBirthDatePickerVisibility(visibility) {
+    const { dob } = this.state;
+
+    let dobError = '';
+    if (visibility === false && !dob) {
+      dobError = 'You date of birth is required';
+    }
+
+    this.setState({
+      birthDatePickerVisible: visibility,
+      dobError,
+    });
+  }
+
+  onDateOfBirthSelected(date) {
+    this.setState({ dob: date, dobError: '', }, () => {
+      this.setBirthDatePickerVisibility(false);
+    });
+  }
+
+  formatDate(date) {
+    date = new Date(date);
+
+    const day = date.getDate();
+    const month = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ][date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${day} ${month}, ${year}`;
+  }
 
   render() {
     let { navigate } = this.props.navigation;
@@ -201,102 +285,147 @@ class BuildProfile extends React.Component {
       phone,
       username,
       dob,
-      loading
+      avatarError,
+      firstnameError,
+      lastnameError,
+      usernameError,
+      emailError,
+      passwordError,
+      dobError,
+      birthDatePickerVisible,
+      loading,
     } = this.state;
     let isButtonEnabled =
-      !!lastname &&
-      !!firstname &&
-      !!password &&
-      !!email &&
-      !!phone &&
-      !!username &&
-      !!dob;
+      (avatar && !avatarError)
+      && (firstname && !firstnameError)
+      && (lastname && !lastnameError)
+      && (password && !passwordError)
+      && (email && !emailError)
+      && phone
+      && (username && !usernameError)
+      && (dob && !dobError);
     console.log(this.state.avatar);
 
     return (
       <KeyboardAvoidingView behavior="padding" enabled>
         <ScrollView
+          style={{ marginTop: 40, }}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ alignItems: 'center', paddingBottom: 10 }}
+          contentContainerStyle={{
+            paddingLeft: 25,
+            paddingRight: 25,
+            paddingBottom: 10,
+          }}
         >
-          <CloseWrap>
-            <TouchableOpacity onPress={() => this.props.navigation.goback()}>
-              <Icon name="close" size={40} style={{ color: Colors.squlptr }} />
-            </TouchableOpacity>
-          </CloseWrap>
           <HeaderText>Build Profile</HeaderText>
           <BodyText>
             Enter one time 4-digit confirmation code sent to your phone number
           </BodyText>
 
-          {avatar && <RoundedImage src={avatar} />}
-          {!avatar && (
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
             <AddPhoto onPress={() => this._pickImage()}>
-              <AddPhotoText>Add Photo</AddPhotoText>
+              {avatar ? (
+                <RoundedImage src={avatar} />
+              ) : (
+                <AddPhotoText>Add Photo</AddPhotoText>
+              )}
             </AddPhoto>
-          )}
+            {avatarError ? <ErrorText>{avatarError}</ErrorText> : null}
+          </View>
+
           <TextInputBox
-            onChangeText={firstname => this.setState({ firstname })}
+            onChangeText={firstname => this.setName('firstname', firstname)}
             clearButtonMode="always"
             value={this.state.firstname}
-            style={{ width: '80%' }}
+            style={{ width: '100%' }}
             keyboardType="name-phone-pad"
             placeholder="First name"
+            placeholderTextColor="#344148"
           />
+          {firstnameError ? <ErrorText>{firstnameError}</ErrorText> : null}
           <TextInputBox
-            onChangeText={lastname => this.setState({ lastname })}
+            onChangeText={lastname => this.setName('lastname', lastname)}
             clearButtonMode="always"
             value={this.state.lastname}
-            style={{ width: '80%' }}
+            style={{ width: '100%' }}
             keyboardType="name-phone-pad"
             placeholder="Last name"
+            placeholderTextColor="#344148"
           />
+          {lastnameError ? <ErrorText>{lastnameError}</ErrorText> : null}
           <TextInputBox
-            onChangeText={username => this.setState({ username })}
+            onChangeText={username => this.setName('username', username)}
             clearButtonMode="always"
             value={this.state.username}
-            style={{ width: '80%' }}
+            style={{ width: '100%' }}
             keyboardType="name-phone-pad"
-            placeholder="username"
+            placeholder="Username"
+            placeholderTextColor="#344148"
           />
+          {usernameError ? <ErrorText>{usernameError}</ErrorText> : null}
           <TextInputBox
-            onChangeText={email => this.setState({ email })}
+            onChangeText={email => this.setEmail(email)}
             clearButtonMode="always"
             value={this.state.email}
-            style={{ width: '80%', marginBottom: 5 }}
+            style={{ width: '100%' }}
             keyboardType="email-address"
-            placeholder="email"
+            placeholder="Email"
+            placeholderTextColor="#344148"
           />
+          {emailError ? <ErrorText>{emailError}</ErrorText> : null}
           <TextInputBox
-            onChangeText={password => this.setState({ password })}
+            onChangeText={password => this.setPassword(password)}
             clearButtonMode="always"
             value={this.state.password}
             secureTextEntry={true}
-            style={{ width: '80%', marginBottom: 5 }}
-            placeholder="password"
+            style={{ width: '100%' }}
+            placeholder="Password"
+            placeholderTextColor="#344148"
           />
+          {passwordError ? <ErrorText>{passwordError}</ErrorText> : null}
           <TextInputBox
             onChangeText={phone => this.setState({ phone })}
             clearButtonMode="always"
             value={this.state.phone}
-            style={{ width: '80%', marginBottom: 5 }}
+            style={{ width: '100%' }}
             keyboardType="phone-pad"
-            placeholder="phone"
+            placeholder="Phone"
+            placeholderTextColor="#344148"
           />
-          <TextInputBox
-            onChangeText={dob => this.setState({ dob })}
+          <DatePicker
             clearButtonMode="always"
-            value={this.state.dob}
-            style={{ width: '80%', marginBottom: 5 }}
-            keyboardType="numbers-and-punctuation"
-            placeholder="dob"
+            style={{ width: '100%' }}
+            onPress={() => this.setBirthDatePickerVisibility(true)}
+          >
+            <Text style={{ color: '#344148' }}>
+              {dob ? this.formatDate(dob) : 'Date of Birth'}
+            </Text>
+          </DatePicker>
+          {dobError ? <ErrorText>{dobError}</ErrorText> : null}
+          <DateTimePicker
+            isVisible={birthDatePickerVisible}
+            onConfirm={date => this.onDateOfBirthSelected(date)}
+            onCancel={() => this.setBirthDatePickerVisibility(false)}
+            maximumDate={new Date()}
+            {...(
+              dob ? {
+                date: new Date(dob)
+              } : {}
+            )}
           />
           <Button
-            isabled={!isButtonEnabled}
+            disabled={!isButtonEnabled}
             title="Continue"
             color={Colors.squlptr}
             isLoading={loading}
             onPress={this.handleSignUp}
+            style={{ width: '100%' }}
           />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -309,6 +438,22 @@ const TextInputBox = styled.TextInput`
   background-color: #f1f1f1;
   padding: 15px;
   margin-top: 15px;
+`;
+
+const DatePicker = styled.TouchableOpacity`
+  border-radius: 12px;
+  background-color: #f1f1f1;
+  padding: 15px;
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ErrorText = styled.Text`
+  font-size: 12px;
+  color: #c00;
+  margin-top: 5px;
 `;
 
 export default BuildProfile;
