@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components/native';
 import {
   ScrollView,
@@ -14,8 +15,9 @@ import Colors from '../../constants/Colors';
 import LogoTitle from '../../components/LogoTitle';
 import Pill from '../../components/Pill';
 import Button from '../../components/Button';
+import { getUserDetails } from '../../redux/actions/user';
 
-export default class Profile extends React.Component {
+class Profile extends React.Component {
   static navigationOptions = ({ navigation, screenProps }) => ({
     headerTitle: <LogoTitle />,
     headerRight: (
@@ -41,15 +43,12 @@ export default class Profile extends React.Component {
 
   state = {
     isEditing: false,
-    user: {
-      name: 'Carey Right',
-      email: 'carey.right@gmail.com',
-      phone: '+15558881234',
-      gender: 'female'
-    },
     interestValue: '',
-    interests: ['Breast Augmentation', 'Lip Filler', 'Liposuction']
   };
+
+  componentDidMount() {
+    this.props.dispatch(getUserDetails());
+  }
 
   handleEdit = () => {
     this.setState({ isEditing: true });
@@ -94,8 +93,15 @@ export default class Profile extends React.Component {
 
   render() {
     let { navigate } = this.props.navigation;
-    let { isEditing, interests, interestValue, user } = this.state;
-    console.log(this.state);
+    let { isEditing, interestValue } = this.state;
+
+    const { user } = this.props;
+
+    for (var i = 0; i < 50; i++) {
+      console.log('*********************************************************');
+    }
+    console.log(user);
+
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -120,10 +126,7 @@ export default class Profile extends React.Component {
                       width: '100%'
                     }}
                     resizeMode="cover"
-                    source={{
-                      uri:
-                        'https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80'
-                    }}
+                    source={{ uri: user.avatar }}
                   />
                 </ProfileImage>
                 <ProfileImageIcon>
@@ -142,8 +145,8 @@ export default class Profile extends React.Component {
                   }}
                 >
                   <View>
-                    <ProfileHeaderText>Carey Right</ProfileHeaderText>
-                    <ProfileSubText>@careyright</ProfileSubText>
+                    <ProfileHeaderText>{user.firstname} {user.lastname}</ProfileHeaderText>
+                    <ProfileSubText>@{user.username}</ProfileSubText>
                   </View>
                   <TouchableOpacity
                     onPress={this.handleEdit}
@@ -160,7 +163,8 @@ export default class Profile extends React.Component {
               )}
             </ProfileImageContainer>
             <View>
-              <HeaderText>Interests</HeaderText>
+              {user.interests.length ? <HeaderText>Interests</HeaderText> : null}
+              {user.interests.length ? (
               <InterestsView
                 showsHorizontalScrollIndicator={false}
                 horizontal={true}
@@ -170,7 +174,7 @@ export default class Profile extends React.Component {
                   paddingVertical: 10
                 }}
               >
-                {interests.map((value, index) => (
+                {user.interests.map((value, index) => (
                   <Pill
                     isDeletable={isEditing}
                     onDelete={() => this.handleDeleteInterest(value)}
@@ -179,6 +183,7 @@ export default class Profile extends React.Component {
                   />
                 ))}
               </InterestsView>
+              ) : null}
               {isEditing === true && (
                 <AddInterestWrap>
                   <TextInputBox
@@ -201,14 +206,14 @@ export default class Profile extends React.Component {
                   <InfoItemLabel>Name</InfoItemLabel>
                   {isEditing === false && (
                     <InfoItemValueBox>
-                      <InfoItemValueText>{user.name}</InfoItemValueText>
+                      <InfoItemValueText>{user.firstname} {user.lastname}</InfoItemValueText>
                     </InfoItemValueBox>
                   )}
                 </InfoItem>
                 {isEditing === true && (
                   <TextInputBox
                     style={{ marginVertical: 5 }}
-                    value={user.name}
+                    value={user.firstname + ' ' + user.lastname}
                     onChangeText={value => this.handleChangeText('name', value)}
                   />
                 )}
@@ -280,6 +285,14 @@ export default class Profile extends React.Component {
     );
   }
 }
+
+const mapState2props = reducer => {
+  return {
+    user: reducer.user.user,
+  }
+};
+
+export default connect(mapState2props)(Profile);
 
 const HeaderText = styled.Text`
   font-weight: 800;
