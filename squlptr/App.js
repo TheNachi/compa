@@ -7,10 +7,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import logger from 'redux-logger';
+import thunk from 'redux-thunk';
 import AppNavigator from './navigation/AppNavigator';
 import rootReducer from './reducers/index';
 
-const store = createStore(rootReducer, applyMiddleware(logger));
+const store = createStore(rootReducer, applyMiddleware(logger, thunk));
 
 export default class App extends React.Component {
   state = {

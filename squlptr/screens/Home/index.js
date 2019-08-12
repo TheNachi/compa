@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components/native';
 import { ScrollView, StyleSheet, View, Image, StatusBar } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -11,6 +12,7 @@ import Pill from '../../components/Pill';
 import DocCard from '../../components/DocCard';
 import { DrawerActions } from 'react-navigation';
 import { Video } from 'expo-av';
+import { fetchFeeds } from '../../redux/actions/feeds';
 
 class Home extends React.Component {
   state = {
@@ -44,6 +46,9 @@ class Home extends React.Component {
   });
 
   componentDidMount = () => {
+    const { dispatch } = this.props;
+    dispatch(fetchFeeds());
+
     let avatar = this.props.navigation.getParam('avatar');
     let firstname = this.props.navigation.getParam('firstname');
     let lastname = this.props.navigation.getParam('lastname');
@@ -58,6 +63,9 @@ class Home extends React.Component {
 
   render() {
     let { firstname, lastname, avatar, username } = this.state;
+
+    const { feeds } = this.props;
+
     return (
       <SafeAreaView>
         <ScrollView ref="_scrollView" contentContainerStyle={styles.container}>
@@ -74,21 +82,18 @@ class Home extends React.Component {
             <Pill title="Liposuction" background="rgba(249, 216, 255, 0.82)" />
           </SkillView>
           <View style={{ paddingHorizontal: 25 }}>
-            <DocCard
-              name="Dr Charles Darwin"
-              clinic="Alba Plastic Surgery and med spa"
-              thumbnail="https://images.unsplash.com/photo-1556228852-6d35a585d566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-              image="https://images.unsplash.com/photo-1561196470-073aadc339e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-              views={1092}
-              hasVideo={true}
-              style={styles.docCard}
-            >
-              <>
+            {feeds.map(feed => (
+              <DocCard
+                key={feed._id}
+                name={feed.owner.firstname + ' ' + feed.owner.lastname}
+                clinic={feed.doctor.practiceName}
+                thumbnail={feed.owner.avatar}
+                views={feed.__v}
+                hasVideo={true}
+                style={styles.docCard}
+              >
                 <Video
-                  source={{
-                    uri:
-                      'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
-                  }}
+                  source={{ uri: feed.videoContent }}
                   rate={1.0}
                   volume={1.0}
                   isMuted={false}
@@ -103,70 +108,9 @@ class Home extends React.Component {
                     marginBottom: 10
                   }}
                 />
-                <DocTextSecondary>{`1092 views`}</DocTextSecondary>
-              </>
-            </DocCard>
-            <DocCard
-              name="Dr Emma Isidi"
-              clinic="Alba Plastic Surgery and med spa"
-              thumbnail="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80"
-              views={2000}
-              hasVideo={true}
-              style={styles.docCard}
-            >
-              <>
-                <Video
-                  source={{
-                    uri:
-                      'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
-                  }}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={false}
-                  resizeMode="cover"
-                  useNativeControls={true}
-                  // shouldPlay
-                  isLooping
-                  style={{
-                    width: '100%',
-                    height: 200,
-                    borderRadius: 12,
-                    marginBottom: 10
-                  }}
-                />
-                <DocTextSecondary>{`1092 views`}</DocTextSecondary>
-              </>
-            </DocCard>
-            <DocCard
-              name="Dr Jane Doe"
-              clinic="Alba Plastic Surgery and med spa"
-              thumbnail="https://images.unsplash.com/photo-1523661149972-0becaca2016e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=914&q=80"
-              hasVideo={true}
-              style={styles.docCard}
-            >
-              <>
-                <Video
-                  source={{
-                    uri:
-                      'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
-                  }}
-                  rate={1.0}
-                  volume={1.0}
-                  isMuted={false}
-                  resizeMode="cover"
-                  useNativeControls={true}
-                  // shouldPlay
-                  isLooping
-                  style={{
-                    width: '100%',
-                    height: 200,
-                    borderRadius: 12,
-                    marginBottom: 10
-                  }}
-                />
-                <DocTextSecondary>{`8000 views`}</DocTextSecondary>
-              </>
-            </DocCard>
+                <DocTextSecondary>{`${feed.__v} ${feed.__v == 1 ? 'view' : 'views'}`}</DocTextSecondary>
+              </DocCard>
+            ))}
           </View>
         </ScrollView>
         <ScrollerStyle
@@ -277,4 +221,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Home;
+const mapState2props = ({ feeds }) => {
+  return {
+    feeds: feeds.feeds,
+  };
+};
+
+export default connect(mapState2props)(Home);
